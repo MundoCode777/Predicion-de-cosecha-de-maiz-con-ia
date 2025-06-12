@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Bienvenido al Dashboard</h1>
+    <button id="logoutBtn">Cerrar sesión</button>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+    <!-- Tu configuración de Firebase -->
+    <script src="firebase.js"></script>
+
+    <script>
+    // Verificar autenticación al cargar
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            // Usuario no autenticado, redirigir a login
+            window.location.href = 'login.html';
+        } else {
+            // Mostrar información del usuario
+            console.log('Usuario logueado:', user);
+            document.querySelector('h1').textContent = `Bienvenido, ${user.displayName || user.email}`;
+        }
+    });
+
+    // Cerrar sesión
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        auth.signOut()
+            .then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Sesión cerrada',
+                    text: 'Has cerrado sesión correctamente',
+                    confirmButtonColor: '#4361ee',
+                    willClose: () => {
+                        window.location.href = 'login.html';
+                    }
+                });
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al cerrar sesión',
+                    confirmButtonColor: '#4361ee'
+                });
+            });
+    });
+    </script>
+</body>
+</html>

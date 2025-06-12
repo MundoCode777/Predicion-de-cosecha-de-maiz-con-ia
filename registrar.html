@@ -244,11 +244,6 @@
             </div>
             
             <div class="input-group">
-                <i class="fas fa-user-tag"></i>
-                <input type="text" id="username" placeholder="Nombre de usuario" required>
-            </div>
-            
-            <div class="input-group">
                 <i class="fas fa-lock"></i>
                 <input type="password" id="password" placeholder="Contraseña" required>
             </div>
@@ -270,14 +265,9 @@
             <div class="divider">o</div>
             
             <div class="social-login">
-                <button type="button" class="social-btn google" title="Google">
-                    <i class="fab fa-google"></i>
-                </button>
-                <button type="button" class="social-btn facebook" title="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-                <button type="button" class="social-btn twitter" title="Twitter">
-                    <i class="fab fa-twitter"></i>
+                <button type="button" id="googleRegisterBtn" class="google-btn">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Registrarse con Google</span>
                 </button>
             </div>
             
@@ -286,44 +276,26 @@
             </div>
         </form>
     </div>
-    <!-- Firebase & SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="firebase.js"></script>
-<script>
-    document.getElementById("registroForm").addEventListener("submit", function (e) {
-  e.preventDefault();
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      Swal.fire("¡Registrado!", "Usuario creado con éxito", "success");
-      setTimeout(() => window.location.href = "login.html", 2000);
-    })
-    .catch((error) => {
-      Swal.fire("Error", error.message, "error");
-    });
-});
-
-</script>
-<!-- Tu código específico -->
-<script src="registrar.js"></script>
+    <!-- Tu configuración de Firebase -->
+    <script src="firebase.js"></script>
 
     <script>
+    // Manejo del formulario de registro
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
-        const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
         const confirmPassword = document.getElementById('confirmPassword').value.trim();
         const terms = document.getElementById('terms').checked;
         
         // Validaciones
-        if (name === '' || email === '' || username === '' || password === '' || confirmPassword === '') {
+        if (name === '' || email === '' || password === '' || confirmPassword === '') {
             Swal.fire({
                 icon: 'error',
                 title: 'Campos vacíos',
@@ -363,17 +335,73 @@
             return;
         }
         
-        // Simulación de registro exitoso
-        Swal.fire({
-            icon: 'success',
-            title: '¡Registro exitoso!',
-            text: 'Tu cuenta ha sido creada correctamente.',
-            confirmButtonColor: '#4361ee',
-            willClose: () => {
-                // Redirigir al login después del registro
-                window.location.href = 'login.html';
-            }
-        });
+        // Crear usuario en Firebase
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                // Actualizar el nombre del usuario
+                return userCredential.user.updateProfile({
+                    displayName: name
+                });
+            })
+            .then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    text: 'Tu cuenta ha sido creada correctamente.',
+                    confirmButtonColor: '#4361ee',
+                    willClose: () => {
+                        window.location.href = 'login.html';
+                    }
+                });
+            })
+            .catch((error) => {
+                let errorMessage;
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Este email ya está registrado';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'El formato del email no es válido';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'La contraseña es demasiado débil';
+                        break;
+                    default:
+                        errorMessage = 'Ocurrió un error al registrarte';
+                }
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en el registro',
+                    text: errorMessage,
+                    confirmButtonColor: '#4361ee'
+                });
+            });
+    });
+
+    // Registro con Google
+    document.getElementById('googleRegisterBtn').addEventListener('click', function() {
+        auth.signInWithPopup(googleProvider)
+            .then((result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registro exitoso!',
+                    text: `Te has registrado como ${result.user.displayName || result.user.email}`,
+                    confirmButtonColor: '#4361ee',
+                    willClose: () => {
+                        window.location.href = 'dashboard.html';
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error("Error en Google Sign-In:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de registro',
+                    text: 'Ocurrió un error al registrarte con Google',
+                    confirmButtonColor: '#4361ee'
+                });
+            });
     });
     </script>
 </body>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <style>
+    :root {
+        --primary-color: #4361ee;
+        --primary-hover: #3a56d4;
+        --secondary-color: #f72585;
+        --text-color: #2b2d42;
+        --light-gray: #f8f9fa;
+        --border-color: #e9ecef;
+        --google-color: #DB4437;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+    }
+    
+    .auth-container {
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+    
+    .auth-container h2 {
+        margin-bottom: 1.8rem;
+        font-weight: 600;
+        font-size: 1.8rem;
+        color: var(--text-color);
+        text-align: center;
+    }
+    
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .input-group input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        background-color: var(--light-gray);
+    }
+    
+    .input-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .input-group i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+    
+    .auth-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .auth-btn:active {
+        transform: translateY(0);
+    }
+    
+    .auth-link {
+        display: block;
+        text-align: right;
+        margin-top: 0.5rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .auth-link:hover {
+        color: var(--primary-color);
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .divider::before {
+        margin-right: 1rem;
+    }
+    
+    .divider::after {
+        margin-left: 1rem;
+    }
+    
+    .social-login {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .google-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        padding: 0.8rem 1.5rem;
+        background: white;
+        color: #5F6368;
+        border: 1px solid #DADCE0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    
+    .google-btn:hover {
+        background: #f8f9fa;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        transform: translateY(-1px);
+    }
+    
+    .google-btn:active {
+        transform: translateY(0);
+    }
+    
+    .google-icon {
+        color: var(--google-color);
+        font-size: 1.2rem;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        color: #6c757d;
+    }
+    
+    .auth-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    </style>
+    <div class="auth-container">
+        <h2>Iniciar Sesión</h2>
+        <form id="loginForm" autocomplete="off">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" placeholder="Usuario o Email" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Contraseña" required>
+            </div>
+            
+            <a href="#" class="auth-link">¿Olvidaste tu contraseña?</a>
+            
+            <button type="submit" class="auth-btn">
+                <span>Entrar</span>
+            </button>
+            
+            <div class="divider">o</div>
+            
+            <div class="social-login">
+                <button type="button" class="google-btn">
+                    <i class="fab fa-google google-icon"></i>
+                    <span>Continuar con Google</span>
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                ¿No tienes una cuenta? <a href="/registrar.html">Regístrate</a>
+            </div>
+        </form>
+    </div>
+    <!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<!-- Tu configuración personalizada -->
+<script src="firebase.js"></script>
+<script>
+    // login.js
+
+document.getElementById("loginForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      Swal.fire("¡Bienvenido!", "Inicio de sesión exitoso", "success");
+      setTimeout(() => window.location.href = "dashboard.html", 2000);
+    })
+    .catch((error) => {
+      Swal.fire("Error", "Usuario o contraseña incorrectos", "error");
+    });
+});
+
+</script>
+
+    <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+        
+        if (user === '' || pass === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos vacíos',
+                text: 'Por favor, completa todos los campos.',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        // Demo: usuario "admin", contraseña "1234"
+        if (user === 'admin' && pass === '1234') {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Bienvenido!',
+                text: 'Has iniciado sesión correctamente.',
+                confirmButtonColor: '#4361ee',
+                willClose: () => {
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de autenticación',
+                text: 'Usuario o contraseña incorrectos.',
+                confirmButtonColor: '#4361ee'
+            });
+        }
+    });
+
+    // Google login
+    document.querySelector('.google-btn').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Iniciar sesión con Google',
+            text: 'Serás redirigido a Google para autenticarte',
+            icon: 'info',
+            confirmButtonColor: '#4361ee',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Continuar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Aquí iría la lógica de autenticación con Google
+                Swal.fire({
+                    title: 'Proceso de Google',
+                    html: 'Esta es una simulación. En una aplicación real, se redirigiría a Google para autenticación.',
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+        });
+    });
+    </script>
+</body>
+</html>

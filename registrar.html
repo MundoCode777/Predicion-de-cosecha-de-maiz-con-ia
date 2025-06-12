@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <style>
+    :root {
+        --primary-color: #4361ee;
+        --primary-hover: #3a56d4;
+        --secondary-color: #f72585;
+        --text-color: #2b2d42;
+        --light-gray: #f8f9fa;
+        --border-color: #e9ecef;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        display: flex;
+        min-height: 100vh;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+    }
+    
+    .auth-container {
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+    
+    .auth-container h2 {
+        margin-bottom: 1.8rem;
+        font-weight: 600;
+        font-size: 1.8rem;
+        color: var(--text-color);
+        text-align: center;
+    }
+    
+    .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .input-group input {
+        width: 100%;
+        padding: 1rem 1rem 1rem 3rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        background-color: var(--light-gray);
+    }
+    
+    .input-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+    
+    .input-group i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6c757d;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+    
+    .auth-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .auth-btn:active {
+        transform: translateY(0);
+    }
+    
+    .terms {
+        display: flex;
+        align-items: center;
+        margin: 1rem 0;
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+    
+    .terms input {
+        margin-right: 0.5rem;
+    }
+    
+    .terms a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+    
+    .terms a:hover {
+        text-decoration: underline;
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .divider::before {
+        margin-right: 1rem;
+    }
+    
+    .divider::after {
+        margin-left: 1rem;
+    }
+    
+    .social-login {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--light-gray);
+        color: #6c757d;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .social-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    
+    .social-btn.google:hover {
+        color: #db4437;
+        background: rgba(219, 68, 55, 0.1);
+    }
+    
+    .social-btn.facebook:hover {
+        color: #4267B2;
+        background: rgba(66, 103, 178, 0.1);
+    }
+    
+    .social-btn.twitter:hover {
+        color: #1DA1F2;
+        background: rgba(29, 161, 242, 0.1);
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.95rem;
+        color: #6c757d;
+    }
+    
+    .auth-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    </style>
+    <div class="auth-container">
+        <h2>Crear Cuenta</h2>
+        <form id="registerForm" autocomplete="off">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" placeholder="Nombre completo" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Correo electrónico" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-user-tag"></i>
+                <input type="text" id="username" placeholder="Nombre de usuario" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Contraseña" required>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
+            </div>
+            
+            <div class="terms">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
+            </div>
+            
+            <button type="submit" class="auth-btn">
+                <span>Registrarse</span>
+            </button>
+            
+            <div class="divider">o</div>
+            
+            <div class="social-login">
+                <button type="button" class="social-btn google" title="Google">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button type="button" class="social-btn facebook" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" class="social-btn twitter" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </button>
+            </div>
+            
+            <div class="auth-footer">
+                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a>
+            </div>
+        </form>
+    </div>
+    <!-- Firebase & SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="firebase.js"></script>
+<script>
+    document.getElementById("registroForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      Swal.fire("¡Registrado!", "Usuario creado con éxito", "success");
+      setTimeout(() => window.location.href = "login.html", 2000);
+    })
+    .catch((error) => {
+      Swal.fire("Error", error.message, "error");
+    });
+});
+
+</script>
+<!-- Tu código específico -->
+<script src="registrar.js"></script>
+
+    <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        const terms = document.getElementById('terms').checked;
+        
+        // Validaciones
+        if (name === '' || email === '' || username === '' || password === '' || confirmPassword === '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Campos vacíos',
+                text: 'Por favor, completa todos los campos.',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        if (!terms) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Términos no aceptados',
+                text: 'Debes aceptar los términos y condiciones para registrarte.',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Contraseñas no coinciden',
+                text: 'Las contraseñas ingresadas no son iguales.',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        if (password.length < 6) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Contraseña muy corta',
+                text: 'La contraseña debe tener al menos 6 caracteres.',
+                confirmButtonColor: '#4361ee'
+            });
+            return;
+        }
+        
+        // Simulación de registro exitoso
+        Swal.fire({
+            icon: 'success',
+            title: '¡Registro exitoso!',
+            text: 'Tu cuenta ha sido creada correctamente.',
+            confirmButtonColor: '#4361ee',
+            willClose: () => {
+                // Redirigir al login después del registro
+                window.location.href = 'login.html';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

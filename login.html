@@ -118,35 +118,52 @@
   </div>
 
   <script type="module">
-    import { auth, googleProvider } from './firebase.js';
-    import { signInWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11/+esm';
+  import { auth, googleProvider } from './firebase.js';
+  import { signInWithEmailAndPassword, signInWithPopup } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11/+esm';
 
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("loginBtn");
-    const googleLoginBtn = document.getElementById("googleLoginBtn");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const loginBtn = document.getElementById("loginBtn");
+  const googleLoginBtn = document.getElementById("googleLoginBtn");
 
-    loginBtn.addEventListener("click", async () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
+  loginBtn.addEventListener("click", async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        Swal.fire("¡Bienvenido!", "Inicio de sesión exitoso", "success");
-      } catch (error) {
-        Swal.fire("Error", error.message, "error");
-      }
-    });
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: 'Inicio de sesión exitoso',
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "dashboard.html"; // Redirección aquí
+      });
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  });
 
-    googleLoginBtn.addEventListener("click", async () => {
-      try {
-        await signInWithPopup(auth, googleProvider);
-        Swal.fire("¡Bienvenido!", "Has iniciado sesión con Google", "success");
-      } catch (error) {
-        Swal.fire("Error", error.message, "error");
-      }
-    });
-  </script>
+  googleLoginBtn.addEventListener("click", async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: 'Has iniciado sesión con Google',
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "/dashboard.html"; // Redirección aquí también
+      });
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  });
+</script>
+
 </body>
 </html>

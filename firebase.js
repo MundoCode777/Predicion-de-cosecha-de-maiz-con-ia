@@ -3,13 +3,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebas
 import { getAuth, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA0Uh4IEXNumX57nzLYAJmHj_7jckW7av8",
-  authDomain: "prediciones-de-maiz.firebaseapp.com",
-  projectId: "prediciones-de-maiz",
-  storageBucket: "prediciones-de-maiz.appspot.com",
-  messagingSenderId: "477067701282",
-  appId: "1:477067701282:web:f20226490a2ede8c91ee7b",
-  measurementId: "G-3DN0606EEF"
+  apiKey: "AIzaSyAAONTVcHjM2U3O4zXklahSAwinLVDKI5w",
+  authDomain: "prediciones-de-maiz-ee22c.firebaseapp.com",
+  projectId: "prediciones-de-maiz-ee22c",
+  storageBucket: "prediciones-de-maiz-ee22c.firebasestorage.app",
+  messagingSenderId: "985007785097",
+  appId: "1:985007785097:web:754af3b5611b4476e33258",
+  measurementId: "G-BHF799DL1B"
 };
 
 const app = initializeApp(firebaseConfig);

@@ -3,33 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
+  <title>Dashboard Banano</title>
   <link rel="stylesheet" href="./css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="dashboard">
     <aside class="sidebar">
-      <h2>🌽 MaízApp</h2>
-      <nav>
-        <ul>
-          <li><button data-page="inicio">Inicio</button></li>
-          <li><button data-page="modelo">Predicción</button></li>
-          <li><button data-page="reportes">Reportes</button></li>
-          <li><button id="logoutBtn">Cerrar sesión</button></li>
-        </ul>
-      </nav>
+      <div class="logo">🍌 BananoSys</div>
+      <ul>
+        <li></a><button data-page="inicio">📊 Inicio</button></li>
+        <li><a href="importaciones.html" class="menu-link">🚢 <span>Importaciones</span></a></li>
+        <li><a href="prediccion.html" class="menu-link">🌾 <span>Predicción</span></a></li>
+        <li><button data-page="estadisticas">📈 Estadísticas</button></li>
+        <li><button id="logoutBtn">🔒 Cerrar sesión</button></li>
+      </ul>
     </aside>
-    
-    <main class="content">
-      <section id="contenido">
-        <h1>Bienvenido</h1>
-        <p>Selecciona una opción del menú para comenzar.</p>
-      </section>
+    <main>
+      <header class="topbar">
+        <h1>Panel de Control de Banano</h1>
+      </header>
+      <section id="contenido" class="content fade-in"></section>
     </main>
   </div>
 
-  <!-- Firebase SDK -->
   <script type="module" src="./js/dashboard.js"></script>
 </body>
 </html>

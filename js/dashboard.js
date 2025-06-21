@@ -1,76 +1,79 @@
 import { auth } from './firebase.js';
 import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11/+esm';
 
-// Verificar autenticación al cargar
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = 'login.html';
   } else {
-    document.getElementById("contenido").innerHTML = `
-      <h1>Bienvenido, ${user.displayName || user.email}</h1>
-      <p>Selecciona una opción del menú para comenzar.</p>
-    `;
+    mostrarPagina('inicio');
   }
 });
 
-// Manejar cierre de sesión con confirmación
 document.getElementById('logoutBtn').addEventListener('click', () => {
   Swal.fire({
-    title: '¿Estás seguro?',
-    text: "¿Deseas cerrar sesión?",
+    title: '¿Cerrar sesión?',
+    text: '¿Deseas salir del sistema?',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, cerrar sesión',
+    confirmButtonText: 'Sí, cerrar',
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.isConfirmed) {
-      auth.signOut().then(() => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Sesión cerrada',
-          text: 'Redirigiendo al login...',
-          timer: 1500,
-          showConfirmButton: false
-        }).then(() => window.location.href = 'login.html');
-      }).catch(() => {
-        Swal.fire("Error", "No se pudo cerrar sesión", "error");
-      });
+      auth.signOut().then(() => window.location.href = 'login.html');
     }
   });
 });
 
-// Navegación del menú
-document.querySelectorAll('.sidebar button[data-page]').forEach(btn => {
+document.querySelectorAll('button[data-page]').forEach(btn => {
   btn.addEventListener('click', () => {
-    const page = btn.dataset.page;
-    mostrarPagina(page);
+    mostrarPagina(btn.dataset.page);
   });
 });
 
 function mostrarPagina(pagina) {
-  let contenidoHTML = '';
+  const cont = document.getElementById("contenido");
+  cont.classList.remove("fade-in");
 
-  switch (pagina) {
-    case 'inicio':
-      contenidoHTML = `
-        <h1>Inicio</h1>
-        <p>Bienvenido a la plataforma de predicción de cosecha de maíz.</p>`;
-      break;
-    case 'modelo':
-      contenidoHTML = `
-        <h1>Predicción</h1>
-        <p>Esta sección mostrará los resultados del modelo de predicción.</p>`;
-      break;
-    case 'reportes':
-      contenidoHTML = `
-        <h1>Reportes</h1>
-        <p>Aquí se mostrarán los reportes históricos de producción.</p>`;
-      break;
-    default:
-      contenidoHTML = `<h1>Error</h1><p>Sección no encontrada.</p>`;
-  }
+  setTimeout(() => {
+    let html = "";
 
-  document.getElementById("contenido").innerHTML = contenidoHTML;
+    if (pagina === 'inicio') {
+      html = `
+        <div class="card"><h2>Volumen Importado</h2><p>1,500 Tn</p></div>
+        <div class="card"><h2>Contenedores en tránsito</h2><p>28</p></div>
+        <div class="card"><h2>Producción estimada</h2><p>900 Tn</p></div>
+        <div class="card"><h2>Gráfico</h2><canvas id="chartBanano" height="200"></canvas></div>
+      `;
+    } else if (pagina === 'importaciones') {
+      html = `<div class="card"><h2>Control de Importaciones</h2><p>Estado de pedidos, aduanas, y embarques.</p></div>`;
+    } else if (pagina === 'prediccion') {
+      html = `<div class="card"><h2>Predicción de cosecha</h2><p>Proyecciones basadas en clima y producción histórica.</p></div>`;
+    } else if (pagina === 'estadisticas') {
+      html = `<div class="card"><h2>Estadísticas Históricas</h2><p>Rendimiento por mes, por finca y por región.</p></div>`;
+    }
+
+    cont.innerHTML = html;
+    cont.classList.add("fade-in");
+
+    if (pagina === "inicio") {
+      setTimeout(() => {
+        const ctx = document.getElementById('chartBanano').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+            datasets: [{
+              label: 'Toneladas',
+              data: [300, 450, 500, 400, 600],
+              backgroundColor: '#fbbc05'
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      }, 100);
+    }
+  }, 200);
 }

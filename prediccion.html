@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Predicción de Cosecha</title>
+  <link rel="stylesheet" href="./css/prediccion.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Predicción de Cosecha de Banano</h1>
+    
+    <form id="formPrediccion">
+      <label>Temperatura (°C):</label>
+      <input type="number" name="temperatura" required />
+      
+      <label>Humedad (%):</label>
+      <input type="number" name="humedad" required />
+      
+      <label>Fase del cultivo:</label>
+      <select name="fase">
+        <option value="siembra">Siembra</option>
+        <option value="floración">Floración</option>
+        <option value="maduración">Maduración</option>
+      </select>
+      
+      <button type="submit">Predecir cosecha</button>
+    </form>
+
+    <div id="resultado" class="resultado">Esperando datos...</div>
+
+    <canvas id="graficoPrediccion" height="200"></canvas>
+
+    <a class="volver" href="dashboard.html">← Volver al Dashboard</a>
+  </div>
+
+  <script type="module" src="./js/prediccion.js"></script>
+</body>
+</html>

@@ -38,42 +38,76 @@ function mostrarPagina(pagina) {
     let html = "";
 
     if (pagina === 'inicio') {
+      const prediccion = JSON.parse(localStorage.getItem("ultimaPrediccion"));
+      const grafico = JSON.parse(localStorage.getItem("graficoUltimaPrediccion"));
+
       html = `
         <div class="card"><h2>Volumen Importado</h2><p>1,500 Tn</p></div>
         <div class="card"><h2>Contenedores en tránsito</h2><p>28</p></div>
-        <div class="card"><h2>Producción estimada</h2><p>900 Tn</p></div>
-        <div class="card"><h2>Gráfico</h2><canvas id="chartBanano" height="200"></canvas></div>
-      `;
+        <div class="card"><h2>Producción estimada</h2><p>900 Tn</p></div>`;
+
+      if (prediccion && grafico?.curva) {
+        html += `
+          <div class="card">
+            <h2>🌱 Última Predicción de Cosecha</h2>
+            <p><strong>Fecha:</strong> ${grafico.fecha}</p>
+            <p><strong>Rendimiento estimado:</strong> ${prediccion.rendimiento} Tn/Ha</p>
+            <canvas id="graficoInicio" height="200"></canvas>
+          </div>`;
+      } else {
+        html += `
+          <div class="card">
+            <h2>🌱 Última Predicción</h2>
+            <p>No se ha realizado ninguna predicción aún.</p>
+          </div>`;
+      }
     } else if (pagina === 'importaciones') {
-      html = `<div class="card"><h2>Control de Importaciones</h2><p>Estado de pedidos, aduanas, y embarques.</p></div>`;
+      html = `<div class="card"><h2>Control de Importaciones</h2><p>Estado de pedidos, aduanas y embarques.</p></div>`;
     } else if (pagina === 'prediccion') {
-      html = `<div class="card"><h2>Predicción de cosecha</h2><p>Proyecciones basadas en clima y producción histórica.</p></div>`;
+      html = `<div class="card"><h2>Predicción de cosecha</h2><p>Haz clic en el menú lateral para predecir.</p></div>`;
     } else if (pagina === 'estadisticas') {
-      html = `<div class="card"><h2>Estadísticas Históricas</h2><p>Rendimiento por mes, por finca y por región.</p></div>`;
+      html = `<div class="card"><h2>Estadísticas Históricas</h2><p>Rendimiento por mes, finca y región.</p></div>`;
     }
 
     cont.innerHTML = html;
     cont.classList.add("fade-in");
 
-    if (pagina === "inicio") {
-      setTimeout(() => {
-        const ctx = document.getElementById('chartBanano').getContext('2d');
+    if (pagina === 'inicio') {
+      const grafico = JSON.parse(localStorage.getItem("graficoUltimaPrediccion"));
+
+      if (grafico?.curva) {
+        const ctx = document.getElementById('graficoInicio').getContext('2d');
         new Chart(ctx, {
-          type: 'bar',
+          type: 'line',
           data: {
-            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May'],
+            labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
             datasets: [{
-              label: 'Toneladas',
-              data: [300, 450, 500, 400, 600],
-              backgroundColor: '#fbbc05'
+              label: 'Predicción (Tn/Ha)',
+              data: grafico.curva,
+              borderColor: '#4caf50',
+              backgroundColor: 'rgba(76, 175, 80, 0.2)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 4
             }]
           },
           options: {
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
+            responsive: true,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Toneladas por Hectárea'
+                }
+              }
+            }
           }
         });
-      }, 100);
+      }
     }
   }, 200);
 }

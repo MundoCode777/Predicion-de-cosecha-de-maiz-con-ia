@@ -7,27 +7,134 @@
   <link rel="stylesheet" href="./css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .prediccion-card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    .prediccion-card h2 {
+      margin-bottom: 10px;
+      color: #388e3c;
+    }
+    .prediccion-card p {
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .grafico-prediccion {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <div class="dashboard">
     <aside class="sidebar">
       <div class="logo">🍌 BananoSys</div>
       <ul>
-        <li></a><button data-page="inicio">📊 Inicio</button></li>
-        <li><a href="importaciones.html" class="menu-link">🚢 <span>Importaciones</span></a></li>
         <li><a href="prediccion.html" class="menu-link">🌾 <span>Predicción</span></a></li>
-        <li><button data-page="estadisticas">📈 Estadísticas</button></li>
+        <li><a href="Exportaciones.html" class="menu-link">🚚 <span>Gestión de Exportaciones</span></a></li>
+        <li><a href="InventarioyPostcosecha.html" class="menu-link">🧾 <span>Inventario y Postcosecha</span></a></li>
+        <li><a href="AnálisisEstadísticodeProducción.html" class="menu-link">📈 <span>Análisis Estadístico de Producción</span></a></li>
+        <li><a href="ControldePlagasyCalidadPre-Exportación.html" class="menu-link">🐛 <span>Control de Plagas y Calidad Pre-Exportación</span></a></li>
+        <li><a href="CalendarioAgrícola.html" class="menu-link">📅 <span>Calendario Agrícola</span></a></li>
+        <li><a href="RecomendacionesInteligentes(IA).html" class="menu-link">🧠 <span>Recomendaciones Inteligentes (IA)</span></a></li> 
+        <li><a href="GestióndeCostosyRentabilidad.html" class="menu-link">💵 <span>Gestión de Costos y Rentabilidad</span></a></li>
         <li><button id="logoutBtn">🔒 Cerrar sesión</button></li>
       </ul>
     </aside>
     <main>
-      <header class="topbar">
+      <header class="topbar"> 
         <h1>Panel de Control de Banano</h1>
       </header>
-      <section id="contenido" class="content fade-in"></section>
+      <section id="contenido" class="content fade-in">
+        <div id="cardPrediccion"></div>
+        <div class="grafico-prediccion">
+          <canvas id="graficoUltimaPrediccion" height="200"></canvas>
+        </div>
+      </section>
     </main>
   </div>
 
-  <script type="module" src="./js/dashboard.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          Swal.fire({
+            title: '¿Está seguro?',
+            text: '¿Desea cerrar sesión?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, cerrar sesión',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = 'login.html';
+            }
+          });
+        });
+      }
+
+      // Mostrar última predicción
+      const cardContainer = document.getElementById('cardPrediccion');
+      const prediccion = localStorage.getItem("ultimaPrediccion");
+      if (prediccion) {
+        const datos = JSON.parse(prediccion);
+        cardContainer.innerHTML = `
+          <div class="prediccion-card">
+            <h2>📈 Última Predicción de Cosecha</h2>
+            <p><strong>Rendimiento estimado:</strong> ${datos.rendimiento} toneladas por hectárea</p>
+            <p><strong>Fecha:</strong> ${datos.fecha}</p>
+          </div>
+        `;
+
+        // Mostrar gráfico
+        const ctx = document.getElementById("graficoUltimaPrediccion").getContext("2d");
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+            datasets: [{
+              label: 'Predicción (Tn/Ha)',
+              data: [
+                datos.rendimiento * 0.6,
+                datos.rendimiento * 0.8,
+                datos.rendimiento * 0.9,
+                parseFloat(datos.rendimiento)
+              ],
+              borderColor: '#4caf50',
+              backgroundColor: 'rgba(76, 175, 80, 0.2)',
+              fill: true,
+              tension: 0.4,
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Toneladas por Hectárea'
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

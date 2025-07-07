@@ -6,33 +6,7 @@
   <title>Dashboard Banano</title>
   <link rel="stylesheet" href="./css/dashboard.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .prediccion-card {
-      background-color: #ffffff;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 600px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    .prediccion-card h2 {
-      margin-bottom: 10px;
-      color: #388e3c;
-    }
-    .prediccion-card p {
-      margin: 5px 0;
-      font-size: 16px;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .grafico-prediccion {
-      margin-top: 20px;
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
 </head>
 <body>
   <div class="dashboard">
@@ -57,7 +31,7 @@
       <section id="contenido" class="content fade-in">
         <div id="cardPrediccion"></div>
         <div class="grafico-prediccion">
-          <canvas id="graficoUltimaPrediccion" height="200"></canvas>
+          <div id="graficoPrediccion"></div>
         </div>
       </section>
     </main>
@@ -96,43 +70,57 @@
           </div>
         `;
 
-        // Mostrar gráfico
-        const ctx = document.getElementById("graficoUltimaPrediccion").getContext("2d");
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-            datasets: [{
-              label: 'Predicción (Tn/Ha)',
-              data: [
-                datos.rendimiento * 0.6,
-                datos.rendimiento * 0.8,
-                datos.rendimiento * 0.9,
-                parseFloat(datos.rendimiento)
-              ],
-              borderColor: '#4caf50',
-              backgroundColor: 'rgba(76, 175, 80, 0.2)',
-              fill: true,
-              tension: 0.4,
-              pointRadius: 4
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
-              legend: { display: true }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: 'Toneladas por Hectárea'
-                }
-              }
+        // Mostrar gráfico con ECharts (nuevo diseño)
+        var myChart = echarts.init(document.getElementById('graficoPrediccion'));
+        var option = {
+          title: {
+            text: 'Predicción de Cosecha (Toneladas por Hectárea)',
+            left: 'center',
+            textStyle: {
+              color: '#2980b9',
+              fontSize: 16
             }
-          }
-        });
+          },
+          xAxis: {
+            type: 'category',
+            data: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
+            axisLabel: {
+              color: '#7f8c8d'
+            }
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Toneladas por Hectárea',
+            axisLabel: {
+              color: '#7f8c8d'
+            }
+          },
+          series: [{
+            data: [
+              datos.rendimiento * 0.6,
+              datos.rendimiento * 0.8,
+              datos.rendimiento * 0.9,
+              parseFloat(datos.rendimiento)
+            ],
+            type: 'line',
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0, color: '#2ecc71'},
+                {offset: 1, color: '#27ae60'}
+              ])
+            },
+            lineStyle: {
+              color: '#2ecc71',
+              width: 3
+            },
+            itemStyle: {
+              color: '#2ecc71'
+            },
+            animationDuration: 2000, // Efecto de animación
+            animationEasing: 'bounceOut'
+          }]
+        };
+        myChart.setOption(option);
       }
     });
   </script>

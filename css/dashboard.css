@@ -1,7 +1,31 @@
-body {
+:root {
+  --color-primary: #1c2533;
+  --color-secondary: #ffb347;
+  --color-accent: #2ecc71;
+  --color-bg: #f1f3f6;
+  --color-white: #ffffff;
+  --color-text-dark: #1f2d3d;
+  --color-text-muted: #7f8c8d;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --transition-speed: 0.3s;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --color-green: #34a853;
+  --color-red: #ea4335;
+  --color-blue: #4285f4;
+  --color-yellow: #fbbc05;
+}
+
+* {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f9f9f9;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-dark);
 }
 
 .dashboard {
@@ -11,112 +35,138 @@ body {
 }
 
 .sidebar {
-  width: 230px;
-  background: #2e3a59;
-  color: white;
+  width: 260px;
+  background: var(--color-primary);
+  padding-top: 30px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  padding-top: 20px;
-  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .sidebar .logo {
   font-size: 22px;
   text-align: center;
   font-weight: bold;
+  color: #ffd700;
   margin-bottom: 30px;
 }
 
 .sidebar ul {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding-left: 0;
+  flex-grow: 1;
 }
 
 .sidebar ul li {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--color-white);
+  text-decoration: none;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+  transition: background 0.3s ease;
+}
+
+.sidebar ul li a:hover,
+.sidebar ul li a.menu-link:focus {
+  background-color: var(--color-secondary);
+  color: #000;
 }
 
 .sidebar ul li button {
-  width: 100%;
-  background: none;
+  background-color: #e74c3c;
+  color: #fff;
   border: none;
   padding: 12px 20px;
-  text-align: left;
-  font-size: 16px;
-  color: white;
+  width: 90%;
+  margin: 20px auto;
+  font-size: 15px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .sidebar ul li button:hover {
-  background: #40527a;
+  background-color: #c0392b;
+  transform: scale(1.03);
 }
 
+/* Topbar mejorado */
+.topbar {
+  font-size: 26px; /* Antes 32px */
+  font-weight: bold;
+  color: #1c2533;
+  margin-bottom: 20px;
+  padding: 5px 0 0 10px;
+  text-align: left;
+}
+
+
+/* Layout principal */
 main {
-  flex: 1;
+  flex-grow: 1;
+  margin-left: 20px;
+  padding: 5px 5px 30px 20px;
+  background-color: var(--color-bg);
+  overflow-y: auto;
+}
+
+/* Contenido */
+.content {
   display: flex;
   flex-direction: column;
-}
-
-.topbar {
-  background: linear-gradient(to right, #fbbc05, #34a853);
-  padding: 20px;
-  color: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.content {
-  padding: 30px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
-  animation: fade 0.5s ease;
-}
-
-.card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px 30px;
-  margin: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  animation: fadeIn 0.5s ease;
+  align-items: flex-start;
+  margin-left: -20px; /* Antes estaba en 10px o 0 */
 }
 
 
-.card:hover {
-  transform: translateY(-5px);
+/* Tarjeta de predicción */
+.prediccion-card {
+  background-color: #fff8dc;
+  border-left: 6px solid var(--color-yellow);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 500px;
+  margin-left: 0;
+  text-align: left;
 }
 
-.card h2 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #444;
-}
-
-.card p {
-  font-size: 24px;
+.prediccion-card h2 {
+  font-size: 18px;
   font-weight: bold;
-  color: #222;
+  color: #a67c00;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
 }
 
-.fade-in {
-  animation: fade 0.6s ease-in-out;
+.prediccion-card p {
+  font-size: 15px;
+  margin: 6px 0;
+  color: var(--color-text-dark);
 }
 
-@keyframes fade {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.menu-link {
-  display: block;
-  padding: 12px 20px;
-  font-size: 16px;
-  color: white;
-  text-decoration: none;
-  transition: background 0.3s;
-}
+/* Responsivo */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
 
-.menu-link:hover {
-  background: #40527a;
+  main {
+    margin-left: 200px;
+  }
+
+  .topbar {
+    font-size: 24px;
+  }
 }

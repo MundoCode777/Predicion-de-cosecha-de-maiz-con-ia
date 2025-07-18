@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Iniciar Sesión</title>
+  <title>BananaPredict - Iniciar Sesión</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
   <style>
     * {
@@ -16,101 +16,323 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f2f2f2;
+      background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Elementos decorativos de fondo */
+    body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="70" cy="70" r="2.5" fill="rgba(255,255,255,0.1)"/></svg>');
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-100px) rotate(360deg); }
     }
 
     .container {
-      background-color: #ffffff;
-      padding: 2.5rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 3rem 2.5rem;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 380px;
+      max-width: 420px;
+      position: relative;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
-    h2 {
+    .logo-section {
       text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    .app-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #2E7D32;
+      margin-bottom: 0.5rem;
+    }
+
+    .app-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 300;
+    }
+
+    .form-group {
       margin-bottom: 1.5rem;
-      font-weight: 600;
-      color: #333;
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      color: #4CAF50;
+      z-index: 1;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     input {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      padding: 16px 16px 16px 50px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 14px;
-      background-color: #fafafa;
-      transition: 0.2s;
+      background: rgba(255,255,255,0.9);
+      transition: all 0.3s ease;
+      color: #333;
     }
 
     input:focus {
-      border-color: #007bff;
+      border-color: #4CAF50;
       outline: none;
-      background-color: #fff;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    input::placeholder {
+      color: #999;
     }
 
     button {
       width: 100%;
-      padding: 12px;
+      padding: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
     }
 
     #loginBtn {
-      background-color: #007bff;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
       color: white;
-      margin-bottom: 0.8rem;
+      box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
     }
 
     #loginBtn:hover {
-      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
     }
 
     #googleLoginBtn {
-      background-color: #db4437;
+      background: linear-gradient(135deg, #FFC107, #FF8F00);
       color: white;
+      box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
     }
 
     #googleLoginBtn:hover {
-      background-color: #c23321;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    }
+
+    .divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      position: relative;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ddd, transparent);
+    }
+
+    .divider span {
+      background: rgba(255,255,255,0.9);
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
     }
 
     .footer-text {
       text-align: center;
-      margin-top: 1.5rem;
+      margin-top: 2rem;
       font-size: 14px;
       color: #666;
     }
 
     .footer-text a {
-      color: #007bff;
+      color: #4CAF50;
       text-decoration: none;
       font-weight: 500;
+      transition: color 0.3s ease;
     }
 
     .footer-text a:hover {
+      color: #2E7D32;
       text-decoration: underline;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .feature {
+      text-align: center;
+      flex: 1;
+      padding: 0 0.5rem;
+    }
+
+    .feature-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-text {
+      font-size: 0.75rem;
+      color: #666;
+      line-height: 1.3;
+    }
+
+    .loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      .app-title {
+        font-size: 1.5rem;
+      }
+
+      .features {
+        flex-direction: column;
+        gap: 1rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Iniciar Sesión</h2>
-    <input type="email" id="email" placeholder="Correo electrónico" required />
-    <input type="password" id="password" placeholder="Contraseña" required />
-    <button id="loginBtn">Ingresar</button>
-    <button id="googleLoginBtn">Ingresar con Google</button>
+    <div class="logo-section">
+      <div class="logo">🍌</div>
+      <h1 class="app-title">BananaPredict</h1>
+      <p class="app-subtitle">Predicción Inteligente de Cosecha</p>
+    </div>
+
+    <div class="form-group">
+      <div class="input-icon">📧</div>
+      <input type="email" id="email" placeholder="Correo electrónico" required />
+    </div>
+
+    <div class="form-group">
+      <div class="input-icon">🔒</div>
+      <input type="password" id="password" placeholder="Contraseña" required />
+    </div>
+
+    <button id="loginBtn">
+      <span>🚀 Acceder al Dashboard</span>
+    </button>
+
+    <div class="divider">
+      <span>o continúa con</span>
+    </div>
+
+    <button id="googleLoginBtn">
+      <span>🔍 Continuar con Google</span>
+    </button>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">📊</div>
+        <div class="feature-text">Análisis de Datos</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-text">IA Predictiva</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">Tiempo Real</div>
+      </div>
+    </div>
 
     <div class="footer-text">
       ¿No tienes cuenta? <a href="registrar.html">Regístrate aquí</a>
@@ -127,40 +349,133 @@
   const loginBtn = document.getElementById("loginBtn");
   const googleLoginBtn = document.getElementById("googleLoginBtn");
 
+  // Función para mostrar estado de carga
+  function setLoadingState(button, isLoading) {
+    if (isLoading) {
+      button.classList.add('loading');
+      button.style.pointerEvents = 'none';
+    } else {
+      button.classList.remove('loading');
+      button.style.pointerEvents = 'auto';
+    }
+  }
+
+  // Validación de entrada en tiempo real
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  emailInput.addEventListener('input', () => {
+    const email = emailInput.value;
+    if (email && !validateEmail(email)) {
+      emailInput.style.borderColor = '#f44336';
+    } else {
+      emailInput.style.borderColor = '#4CAF50';
+    }
+  });
+
   loginBtn.addEventListener("click", async () => {
     const email = emailInput.value;
     const password = passwordInput.value;
+
+    // Validación básica
+    if (!email || !password) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos requeridos',
+        text: 'Por favor completa todos los campos',
+        confirmButtonColor: '#4CAF50'
+      });
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Email inválido',
+        text: 'Por favor ingresa un email válido',
+        confirmButtonColor: '#4CAF50'
+      });
+      return;
+    }
+
+    setLoadingState(loginBtn, true);
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Swal.fire({
         icon: 'success',
-        title: '¡Bienvenido!',
+        title: '¡Bienvenido a BananaPredict! 🍌',
         text: 'Inicio de sesión exitoso',
-        timer: 1500,
-        showConfirmButton: false
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#f8f9fa',
+        color: '#2E7D32'
       }).then(() => {
-        window.location.href = "dashboard.html"; // Redirección aquí
+        window.location.href = "dashboard.html";
       });
     } catch (error) {
-      Swal.fire("Error", error.message, "error");
+      setLoadingState(loginBtn, false);
+      let errorMessage = 'Error al iniciar sesión';
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          errorMessage = 'Usuario no encontrado';
+          break;
+        case 'auth/wrong-password':
+          errorMessage = 'Contraseña incorrecta';
+          break;
+        case 'auth/invalid-email':
+          errorMessage = 'Email inválido';
+          break;
+        case 'auth/user-disabled':
+          errorMessage = 'Usuario deshabilitado';
+          break;
+        default:
+          errorMessage = 'Error de conexión. Intenta nuevamente';
+      }
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage,
+        confirmButtonColor: '#4CAF50'
+      });
     }
   });
 
   googleLoginBtn.addEventListener("click", async () => {
+    setLoadingState(googleLoginBtn, true);
+    
     try {
       await signInWithPopup(auth, googleProvider);
       Swal.fire({
         icon: 'success',
-        title: '¡Bienvenido!',
+        title: '¡Bienvenido a BananaPredict! 🍌',
         text: 'Has iniciado sesión con Google',
-        timer: 1500,
-        showConfirmButton: false
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#f8f9fa',
+        color: '#2E7D32'
       }).then(() => {
-        window.location.href = "/dashboard.html"; // Redirección aquí también
+        window.location.href = "dashboard.html";
       });
     } catch (error) {
-      Swal.fire("Error", error.message, "error");
+      setLoadingState(googleLoginBtn, false);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al iniciar sesión con Google',
+        confirmButtonColor: '#4CAF50'
+      });
+    }
+  });
+
+  // Permitir login con Enter
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      loginBtn.click();
     }
   });
 </script>

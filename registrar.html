@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registrarse</title>
+  <title>BananaPredict - Crear Cuenta</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
-  <style>
+ <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -16,127 +16,987 @@
 
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f0f2f5;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      padding: 1rem;
     }
 
-    .container {
-      background-color: white;
-      padding: 2.5rem 2rem;
-      border-radius: 16px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+    .main-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 1400px;
       width: 100%;
-      max-width: 380px;
+      min-height: 90vh;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      overflow: hidden;
     }
 
-    h2 {
+    .image-section {
+      background: linear-gradient(135deg, #e6f8eb 0%, #d4f1db 50%, #c8e6c9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    /* Elementos decorativos de fondo */
+    .image-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="25" r="2" fill="rgba(76,175,80,0.1)"/><circle cx="75" cy="35" r="1.5" fill="rgba(76,175,80,0.08)"/><circle cx="45" cy="75" r="1" fill="rgba(76,175,80,0.06)"/><circle cx="65" cy="65" r="2.5" fill="rgba(76,175,80,0.12)"/></svg>');
+      animation: float 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-100px) rotate(360deg); }
+    }
+
+    .phone-illustration {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .phone-mockup {
+      width: min(280px, 25vw);
+      height: min(500px, 45vh);
+      background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+      border-radius: 45px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 
+        0 25px 50px rgba(0,0,0,0.3),
+        inset 0 2px 4px rgba(255,255,255,0.1);
+      transform: rotate(-8deg);
+      border: 3px solid #333;
+      transition: all 0.3s ease;
+    }
+
+    .phone-mockup:hover {
+      transform: rotate(-5deg) scale(1.02);
+    }
+
+    /* Notch del teléfono */
+    .phone-mockup::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 6px;
+      background: #666;
+      border-radius: 3px;
+      z-index: 10;
+    }
+
+    /* Botón home */
+    .phone-mockup::after {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: #2d2d2d;
+      border-radius: 50%;
+      border: 3px solid #444;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: calc(100% - 80px);
+      margin-top: 35px;
+      background: linear-gradient(135deg, #4CAF50, #66BB6A);
+      border-radius: 35px;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-screen::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    }
+
+    .screen-header {
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    .screen-logo {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      animation: bounce 2s infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    .screen-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .screen-subtitle {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .screen-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .screen-input {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      padding: 12px 15px;
+      color: white;
+      font-size: 0.8rem;
+      backdrop-filter: blur(10px);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .screen-input::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .screen-button {
+      background: rgba(255,255,255,0.9);
+      color: #4CAF50;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .screen-button:hover {
+      background: white;
+      transform: translateY(-1px);
+    }
+
+    /* Persona ilustrada */
+    .person-illustration {
+      position: absolute;
+      right: min(-30px, -5vw);
+      bottom: min(80px, 15vh);
+      width: min(140px, 12vw);
+      height: min(200px, 18vh);
+      background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+      border-radius: 70px 70px 35px 35px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: min(25px, 3vh);
+      transform: rotate(12deg);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      z-index: 0;
+      transition: all 0.3s ease;
+    }
+
+    .person-illustration:hover {
+      transform: rotate(8deg) scale(1.05);
+    }
+
+    .person-head {
+      width: 50px;
+      height: 50px;
+      background: #FCD34D;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      position: relative;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .person-hair {
+      position: absolute;
+      top: -15px;
+      left: 8px;
+      width: 35px;
+      height: 30px;
+      background: #92400E;
+      border-radius: 18px 18px 8px 8px;
+    }
+
+    .person-face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+    }
+
+    .person-body {
+      width: 60px;
+      height: 80px;
+      background: #3B82F6;
+      border-radius: 30px 30px 15px 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Elementos flotantes */
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .floating-icon {
+      position: absolute;
+      font-size: 2rem;
+      opacity: 0.3;
+      animation: floatIcon 8s ease-in-out infinite;
+    }
+
+    .icon-1 {
+      top: 15%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .icon-2 {
+      top: 25%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+
+    .icon-3 {
+      bottom: 30%;
+      left: 8%;
+      animation-delay: 4s;
+    }
+
+    .icon-4 {
+      bottom: 15%;
+      right: 10%;
+      animation-delay: 6s;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 0.6; }
+    }
+
+    .form-section {
+      padding: clamp(2rem, 5vw, 4rem);
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100%;
+      max-width: 100%;
+      overflow-y: auto;
+    }
+
+    .logo-section {
       text-align: center;
       margin-bottom: 1.5rem;
-      font-weight: 600;
-      color: #333;
+    }
+
+    .logo {
+      font-size: clamp(2.5rem, 5vw, 3rem);
+      margin-bottom: 0.5rem;
+      animation: bounce 2s infinite;
+      filter: drop-shadow(0 4px 8px rgba(76, 175, 80, 0.3));
+    }
+
+    .app-title {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: #2E7D32;
+      line-height: 1.2;
+    }
+
+    .app-subtitle {
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      color: #666;
+      font-weight: 300;
+      line-height: 1.4;
+    }
+
+    .signup-subtitle {
+      font-size: clamp(0.8rem, 1.5vw, 0.85rem);
+      color: #4CAF50;
+      font-weight: 500;
+      background: rgba(76, 175, 80, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 1rem 0;
+      border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .password-group {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      z-index: 2;
+    }
+
+    .input-icon.email {
+      color: #2196F3;
+    }
+
+    .input-icon.lock {
+      color: #FF9800;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: auto;
+      margin: 0;
+      z-index: 2;
+    }
+
+    .toggle-password:hover {
+      color: #4CAF50;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .password-strength {
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+    }
+
+    .strength-text {
+      margin-bottom: 0.4rem;
+      font-weight: 500;
+      min-height: 16px;
+    }
+
+    .strength-bar {
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 0.25rem;
+    }
+
+    .strength-fill {
+      height: 100%;
+      transition: all 0.4s ease;
+      border-radius: 2px;
+    }
+
+    .strength-weak { 
+      background: linear-gradient(90deg, #ef4444, #dc2626); 
+      width: 33%; 
+    }
+    
+    .strength-medium { 
+      background: linear-gradient(90deg, #f59e0b, #d97706); 
+      width: 66%; 
+    }
+    
+    .strength-strong { 
+      background: linear-gradient(90deg, #10b981, #059669); 
+      width: 100%; 
+    }
+
+    .password-requirements {
+      margin-top: 0.5rem;
+      font-size: 0.7rem;
+      color: #666;
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .requirement.met {
+      color: #10b981;
+    }
+
+    .requirement.met .req-icon {
+      color: #10b981;
+    }
+
+    .req-icon {
+      font-size: 0.8rem;
+      color: #ccc;
+      transition: all 0.3s ease;
     }
 
     input {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      padding: 16px 16px 16px 50px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 14px;
-      background-color: #fafafa;
-      transition: 0.2s;
+      background: #fff;
+      color: #333;
+      transition: all 0.3s ease;
     }
 
     input:focus {
-      border-color: #007bff;
+      border-color: #4CAF50;
       outline: none;
-      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+
+    input::placeholder {
+      color: #999;
     }
 
     button {
       width: 100%;
-      padding: 12px;
+      padding: 16px;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       font-size: 15px;
       font-weight: 600;
+      background: linear-gradient(135deg, #66BB6A, #43A047);
+      color: #fff;
+      margin-bottom: 1.5rem;
       cursor: pointer;
-      background-color: #28a745;
-      color: white;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
     }
 
     button:hover {
-      background-color: #218838;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
     }
 
-    .footer-text {
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .requirements, .benefits, .footer-text {
+      font-size: 0.85rem;
+      color: #444;
       text-align: center;
-      margin-top: 1.5rem;
-      font-size: 14px;
-      color: #666;
+    }
+
+    .requirements ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 1rem 0;
+    }
+
+    .requirements li {
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+
+    .requirements li::before {
+      content: '✓';
+      color: #4CAF50;
+      margin-right: 0.5rem;
+      font-weight: bold;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .benefit {
+      background: #f4fdf6;
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(76, 175, 80, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .benefit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+    }
+
+    .benefit-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
     }
 
     .footer-text a {
-      color: #007bff;
+      color: #4CAF50;
+      font-weight: 600;
       text-decoration: none;
-      font-weight: 500;
+      transition: color 0.3s ease;
     }
 
     .footer-text a:hover {
+      color: #2E7D32;
       text-decoration: underline;
+    }
+
+    .loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .main-container {
+        max-width: 95vw;
+        min-height: 85vh;
+      }
+      
+      .phone-mockup {
+        width: min(240px, 30vw);
+        height: min(420px, 50vh);
+      }
+      
+      .person-illustration {
+        width: min(120px, 15vw);
+        height: min(170px, 20vh);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 0.5rem;
+      }
+      
+      .main-container {
+        grid-template-columns: 1fr;
+        max-width: 100vw;
+        min-height: 100vh;
+        border-radius: 0;
+      }
+      
+      .image-section {
+        order: 1;
+        min-height: 40vh;
+        padding: 1.5rem;
+      }
+      
+      .form-section {
+        order: 2;
+        min-height: 60vh;
+        padding: 2rem 1.5rem;
+      }
+      
+      .phone-mockup {
+        width: min(200px, 50vw);
+        height: min(350px, 35vh);
+        transform: rotate(-5deg);
+      }
+      
+      .person-illustration {
+        width: min(100px, 25vw);
+        height: min(140px, 15vh);
+        right: min(-20px, -8vw);
+        bottom: min(60px, 8vh);
+      }
+      
+      .logo-section {
+        margin-bottom: 1rem;
+      }
+      
+      .benefits {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-section {
+        padding: 1.5rem 1rem;
+      }
+      
+      .phone-mockup {
+        width: min(160px, 60vw);
+        height: min(280px, 30vh);
+      }
+      
+      .person-illustration {
+        width: min(80px, 30vw);
+        height: min(110px, 12vh);
+        right: min(-15px, -10vw);
+        bottom: min(40px, 5vh);
+      }
+      
+      .benefits {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+      
+      .input-icon {
+        font-size: 1rem;
+        left: 14px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .main-container {
+        border-radius: 0;
+      }
+      
+      .form-section {
+        padding: 1rem 0.8rem;
+      }
+      
+      .phone-mockup {
+        width: min(140px, 70vw);
+        height: min(240px, 25vh);
+      }
+      
+      .logo {
+        font-size: 2.2rem;
+      }
+      
+      .app-title {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      .main-container {
+        max-width: 1200px;
+      }
+      
+      .phone-mockup {
+        width: 300px;
+        height: 530px;
+      }
+      
+      .person-illustration {
+        width: 160px;
+        height: 220px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Crear Cuenta</h2>
-    <input type="email" id="email" placeholder="Correo electrónico" required />
-    <input type="password" id="password" placeholder="Contraseña" required />
-    <button id="registerBtn">Registrarse</button>
+  <div class="main-container">
+    <div class="image-section">
+      <div class="floating-elements">
+        <div class="floating-icon icon-1">📊</div>
+        <div class="floating-icon icon-2">🎯</div>
+        <div class="floating-icon icon-3">⚡</div>
+        <div class="floating-icon icon-4">🛡️</div>
+      </div>
 
-    <div class="footer-text">
-      ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      <div class="phone-illustration">
+        <div class="phone-mockup">
+          <div class="phone-screen">
+            <div class="screen-header">
+              <div class="screen-logo">🍌</div>
+              <div class="screen-title">BananaPredict</div>
+              <div class="screen-subtitle">Predicción de Cosecha</div>
+            </div>
+            <div class="screen-form">
+              <input type="text" class="screen-input" placeholder="usuario@email.com" readonly>
+              <input type="password" class="screen-input" placeholder="••••••••" readonly>
+              <button class="screen-button">Iniciar Sesión</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="person-illustration">
+          <div class="person-head">
+            <div class="person-hair"></div>
+            <div class="person-face">😊</div>
+          </div>
+          <div class="person-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="logo-section">
+        <div class="logo">🍌</div>
+        <h1 class="app-title">BananaPredict</h1>
+        <p class="app-subtitle">Predicción Inteligente de Cosecha</p>
+        <div class="signup-subtitle">Crear Nueva Cuenta</div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-icon email">📧</div>
+        <input type="email" id="email" placeholder="Correo electrónico" required />
+      </div>
+
+      <div class="form-group">
+        <div class="password-group">
+          <div class="input-icon lock">🔒</div>
+          <input type="password" id="password" placeholder="Contraseña (mín. 6 caracteres)" required />
+          <button type="button" class="toggle-password" id="togglePassword">
+            👁️
+          </button>
+        </div>
+        <div class="password-strength" id="passwordStrength" style="display: none;">
+          <div class="strength-text" id="strengthText"></div>
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="password-requirements">
+            <div class="requirement" id="req-length">
+              <span class="req-icon">○</span>
+              <span>Al menos 6 caracteres</span>
+            </div>
+            <div class="requirement" id="req-uppercase">
+              <span class="req-icon">○</span>
+              <span>Una letra mayúscula</span>
+            </div>
+            <div class="requirement" id="req-lowercase">
+              <span class="req-icon">○</span>
+              <span>Una letra minúscula</span>
+            </div>
+            <div class="requirement" id="req-number">
+              <span class="req-icon">○</span>
+              <span>Un número</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button id="registerBtn" disabled>
+        🌱 Crear Mi Cuenta
+      </button>
+
+      <div class="requirements">
+        <strong>Tu cuenta incluye:</strong>
+        <ul>
+          <li>Acceso completo al dashboard</li>
+          <li>Predicciones ilimitadas</li>
+          <li>Análisis de datos en tiempo real</li>
+          <li>Soporte técnico especializado</li>
+        </ul>
+      </div>
+
+      <div class="benefits">
+        <div class="benefit">
+          <div class="benefit-icon">🎯</div>
+          <div class="benefit-text">Predicciones Precisas</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">📈</div>
+          <div class="benefit-text">Análisis Avanzado</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🔄</div>
+          <div class="benefit-text">Datos en Tiempo Real</div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon">🛡️</div>
+          <div class="benefit-text">Seguridad Total</div>
+        </div>
+      </div>
+
+      <div class="footer-text">
+        ¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a>
+      </div>
     </div>
   </div>
+  
+  <!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+<!-- Firebase App & Auth -->
+<script type="module">
+  import { auth } from './firebase.js';
+  import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
 
-      if (!email || !password) {
-        Swal.fire("Error", "Por favor completa todos los campos.", "error");
-        return;
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const registerBtn = document.getElementById("registerBtn");
+
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function validateForm() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = password.length >= 6;
+
+    registerBtn.disabled = !(isEmailValid && isPasswordValid);
+    return isEmailValid && isPasswordValid;
+  }
+
+  function setLoadingState(isLoading) {
+    if (isLoading) {
+      registerBtn.classList.add('loading');
+      registerBtn.disabled = true;
+    } else {
+      registerBtn.classList.remove('loading');
+      validateForm();
+    }
+  }
+
+  emailInput.addEventListener('input', validateForm);
+  passwordInput.addEventListener('input', validateForm);
+
+  registerBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!validateForm()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor completa todos los campos correctamente.',
+        confirmButtonColor: '#4CAF50'
+      });
+      return;
+    }
+
+    setLoadingState(true);
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Cuenta creada exitosamente! 🎉',
+        html: `
+          <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🍌</div>
+            <p style="margin-bottom: 1rem;">¡Bienvenido a BananaPredict!</p>
+            <p style="color: #666; font-size: 0.9rem;">Tu cuenta ha sido creada. Ahora puedes iniciar sesión.</p>
+          </div>
+        `,
+        confirmButtonText: 'Ir al Login',
+        confirmButtonColor: '#4CAF50',
+        timer: 3000,
+        timerProgressBar: true
+      }).then(() => {
+        window.location.href = "login.html";
+      });
+
+    } catch (error) {
+      setLoadingState(false);
+      let errorMessage = 'Error al crear la cuenta';
+
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Este correo ya está registrado';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Correo inválido';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'La contraseña debe tener al menos 6 caracteres';
       }
 
-      try {
-        const res = await fetch("http://localhost:5000/api/registrar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el registro',
+        text: errorMessage,
+        confirmButtonColor: '#4CAF50'
+      });
+    }
+  });
 
-        const data = await res.json();
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !registerBtn.disabled) {
+      registerBtn.click();
+    }
+  });
 
-        if (res.ok) {
-          Swal.fire("¡Registro exitoso!", "Ahora puedes iniciar sesión.", "success")
-            .then(() => {
-              window.location.href = "login.html";
-            });
-        } else {
-          Swal.fire("Error", data.message, "error");
-        }
+  validateForm();
+</script>
 
-      } catch (error) {
-        console.error(error);
-        Swal.fire("Error", "Hubo un problema al registrar.", "error");
-      }
-    });
-  </script>
 </body>
 </html>

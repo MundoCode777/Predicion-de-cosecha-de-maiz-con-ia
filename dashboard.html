@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Banano</title>
   <link rel="stylesheet" href="./css/dashboard.css" />
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
 </head>
 <body>
   <div class="dashboard">
     <aside class="sidebar">
       <div class="logo">🍌 BananoSys</div>
+      <span id="userNameDisplay" class="user-name">Cargando...</span> <!-- Aquí va el nombre del usuario -->
       <ul>
         <li><a href="prediccion.html" class="menu-link">🌾 <span>Predicción</span></a></li>
         <li><a href="Exportaciones.html" class="menu-link">🚚 <span>Gestión de Exportaciones</span></a></li>
@@ -31,15 +30,34 @@
       <section id="contenido" class="content fade-in">
         <div id="cardPrediccion"></div>
         <div class="grafico-prediccion">
-          <div id="graficoPrediccion"></div>
+          <div id="graficoPrediccion" style="height: 300px;"></div>
         </div>
       </section>
     </main>
   </div>
 
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+  <!-- Firebase scripts -->
+  <script type="module" src="./firebase.js"></script>
+  <script type="module">
+    import { auth } from './firebase.js';
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
     document.addEventListener('DOMContentLoaded', function() {
       const logoutBtn = document.getElementById('logoutBtn');
+      const userNameDisplay = document.getElementById('userNameDisplay');
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const displayName = user.displayName || user.email;
+          userNameDisplay.textContent = `👤 ${displayName}`;
+        } else {
+          // Si no hay usuario autenticado, redirigir a login
+          window.location.href = 'login.html';
+        }
+      });
+
       if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
           Swal.fire({
@@ -51,7 +69,9 @@
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.isConfirmed) {
-              window.location.href = 'login.html';
+              signOut(auth).then(() => {
+                window.location.href = 'login.html';
+              });
             }
           });
         });
@@ -62,7 +82,7 @@
       const prediccion = localStorage.getItem("ultimaPrediccion");
       if (prediccion) {
         const datos = JSON.parse(prediccion);
-        cardContainer.innerHTML = `
+        cardContainer.innerHTML = ` 
           <div class="prediccion-card">
             <h2>📈 Última Predicción de Cosecha</h2>
             <p><strong>Rendimiento estimado:</strong> ${datos.rendimiento} toneladas por hectárea</p>
@@ -70,7 +90,7 @@
           </div>
         `;
 
-        // Mostrar gráfico con ECharts (nuevo diseño)
+        // Mostrar gráfico
         var myChart = echarts.init(document.getElementById('graficoPrediccion'));
         var option = {
           title: {
@@ -116,7 +136,7 @@
             itemStyle: {
               color: '#2ecc71'
             },
-            animationDuration: 2000, // Efecto de animación
+            animationDuration: 2000,
             animationEasing: 'bounceOut'
           }]
         };

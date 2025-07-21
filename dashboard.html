@@ -13,7 +13,7 @@
       <span id="userNameDisplay" class="user-name">Cargando...</span> <!-- Aquí va el nombre del usuario -->
       <ul>
         <li><a href="prediccion.html" class="menu-link">🌾 <span>Predicción</span></a></li>
-        <li><a href="Exportaciones.html" class="menu-link">🚚 <span>Gestión de Exportaciones</span></a></li>
+        <li><a href="exportaciones.html" class="menu-link">🚚 <span>Gestión de Exportaciones</span></a></li>
         <li><a href="InventarioyPostcosecha.html" class="menu-link">🧾 <span>Inventario y Postcosecha</span></a></li>
         <li><a href="AnálisisEstadísticodeProducción.html" class="menu-link">📈 <span>Análisis Estadístico de Producción</span></a></li>
         <li><a href="ControldePlagasyCalidadPre-Exportación.html" class="menu-link">🐛 <span>Control de Plagas y Calidad Pre-Exportación</span></a></li>
@@ -32,6 +32,30 @@
         <div class="grafico-prediccion">
           <div id="graficoPrediccion" style="height: 300px;"></div>
         </div>
+        <!-- Dashboard Section -->
+                <div id="dashboard" class="section active">
+                    <h2>Dashboard de Exportaciones</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-pedidos">0</div>
+                            <div class="stat-label">Total Pedidos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-pendientes">0</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-enviados">0</div>
+                            <div class="stat-label">Enviados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-entregados">0</div>
+                            <div class="stat-label">Entregados</div>
+                        </div>
+                    </div>
+                    <h3>Pedidos Recientes</h3>
+                    <div id="recent-orders"></div>
+                </div>
       </section>
     </main>
   </div>

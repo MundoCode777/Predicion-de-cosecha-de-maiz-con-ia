@@ -179,3 +179,72 @@ main {
   padding: 0 15px;
   word-break: break-word;
 }
+/* Botones primarios del dashboard */
+.btn-primary {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+/* Cuadrícula para mostrar las estadísticas del dashboard */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Las tarjetas se adaptan al tamaño de la pantalla */
+    gap: 20px; /* Espacio entre las tarjetas */
+    margin-bottom: 30px; /* Espacio debajo de la cuadrícula */
+}
+
+/* Estilo de cada tarjeta de estadística */
+.stat-card {
+    background: linear-gradient(135deg, #74b9ff, #0984e3); /* Fondo de gradiente azul */
+    color: white; /* Color del texto */
+    padding: 25px;
+    border-radius: 15px; /* Esquinas redondeadas */
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(116, 185, 255, 0.3); /* Sombra para dar profundidad */
+    transition: transform 0.3s ease; /* Animación al pasar el cursor */
+}
+
+/* Estilo al pasar el cursor sobre las tarjetas */
+.stat-card:hover {
+    transform: translateY(-5px); /* Movimiento hacia arriba */
+}
+
+/* Estilo para el número dentro de cada tarjeta */
+.stat-number {
+    font-size: 2rem; /* Tamaño grande para el número */
+    font-weight: bold; /* Negrita */
+    margin-bottom: 5px; /* Espacio debajo del número */
+}
+
+/* Estilo de la etiqueta dentro de cada tarjeta */
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9; /* Opacidad ligeramente reducida */
+}
+
+/* Estilos generales para la sección del dashboard */
+#dashboard {
+    padding: 30px; /* Espacio interior */
+    background: white; /* Fondo blanco */
+    border-radius: 20px; /* Esquinas redondeadas */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Sombra para el contenedor */
+}
+
+/* Título principal del dashboard */
+#dashboard h2 {
+    font-size: 2rem;
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Título de pedidos recientes */
+#dashboard h3 {
+    font-size: 1.5rem;
+    margin-top: 30px;
+}

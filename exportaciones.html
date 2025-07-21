@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Sistema de Gestión de Exportaciones</title>
+    <link rel="stylesheet" href="./css/exportaciones.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚚 Sistema de Gestión de Exportaciones</h1>
+            <p>Control completo de pedidos de exportación internacional</p>
+        </div>
+
+        <div class="main-content">
+            <nav class="sidebar">
+                <button class="nav-btn active" onclick="showSection('dashboard')">📊 Pedidos</button>
+                <button class="nav-btn" onclick="showSection('nuevo-pedido')">➕ Nuevo Pedido</button>
+                <button class="nav-btn" onclick="showSection('pedidos')">📋 Gestionar Pedidos</button>
+                <button class="nav-btn" onclick="showSection('seguimiento')">🔍 Seguimiento</button>
+                <button class="nav-btn" onclick="showSection('documentos')">📄 Documentos</button>
+            </nav>
+
+            <div class="content">
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="section active">
+                    <h2>Dashboard de Exportaciones</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-pedidos">0</div>
+                            <div class="stat-label">Total Pedidos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-pendientes">0</div>
+                            <div class="stat-label">Pendientes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-enviados">0</div>
+                            <div class="stat-label">Enviados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="pedidos-entregados">0</div>
+                            <div class="stat-label">Entregados</div>
+                        </div>
+                    </div>
+                    <h3>Pedidos Recientes</h3>
+                    <div id="recent-orders"></div>
+                </div>
+
+                <!-- Nuevo Pedido Section -->
+                <div id="nuevo-pedido" class="section">
+                    <h2>Registrar Nuevo Pedido de Exportación</h2>
+                    <form id="pedido-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="cliente">Cliente</label>
+                                <input type="text" id="cliente" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pais-destino">País de Destino</label>
+                                <select id="pais-destino" required>
+                                    <option value="">Seleccionar país</option>
+                                    <option value="Estados Unidos">Estados Unidos</option>
+                                    <option value="México">México</option>
+                                    <option value="Colombia">Colombia</option>
+                                    <option value="Perú">Perú</option>
+                                    <option value="Chile">Chile</option>
+                                    <option value="Brasil">Brasil</option>
+                                    <option value="Argentina">Argentina</option>
+                                    <option value="España">España</option>
+                                    <option value="Francia">Francia</option>
+                                    <option value="Alemania">Alemania</option>
+                                    <option value="Italia">Italia</option>
+                                    <option value="Reino Unido">Reino Unido</option>
+                                    <option value="Países Bajos">Países Bajos</option>
+                                    <option value="Japón">Japón</option>
+                                    <option value="China">China</option>
+                                    <option value="Corea del Sur">Corea del Sur</option>
+                                    <option value="Rusia">Rusia</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="variedad">Variedad del Producto</label>
+                                <select id="variedad" required>
+                                    <option value="">Seleccionar variedad</option>
+                                    <option value="Banano Cavendish">Banano Cavendish</option>
+                                    <option value="Banano Orgánico">Banano Orgánico</option>
+                                    <option value="Plátano Verde">Plátano Verde</option>
+                                    <option value="Cacao en Grano">Cacao en Grano</option>
+                                    <option value="Flores Tropicales">Flores Tropicales</option>
+                                    <option value="Camarón">Camarón</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cantidad">Cantidad (cajas/kg)</label>
+                                <input type="number" id="cantidad" required min="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="fecha-envio">Fecha Programada de Envío</label>
+                                <input type="date" id="fecha-envio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="precio-unitario">Precio Unitario (USD)</label>
+                                <input type="number" id="precio-unitario" step="0.01" required min="0">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notas">Notas Adicionales</label>
+                            <textarea id="notas" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Registrar Pedido</button>
+                    </form>
+                </div>
+
+                <!-- Pedidos Section -->
+                <div id="pedidos" class="section">
+                    <h2>Gestión de Pedidos</h2>
+                    <div class="search-filter">
+                        <input type="text" id="search-orders" class="search-input" placeholder="Buscar por cliente, país o ID...">
+                        <select id="filter-status">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="proceso">En Proceso</option>
+                            <option value="enviado">Enviado</option>
+                            <option value="entregado">Entregado</option>
+                        </select>
+                        <button class="btn-secondary" onclick="exportToCSV()">Exportar CSV</button>
+                    </div>
+                    <div id="orders-list" class="orders-grid"></div>
+                </div>
+
+                <!-- Seguimiento Section -->
+                <div id="seguimiento" class="section">
+                    <h2>Seguimiento de Envíos</h2>
+                    <div class="form-group">
+                        <label for="tracking-id">ID del Pedido</label>
+                        <input type="text" id="tracking-id" placeholder="Ingrese el ID del pedido">
+                        <button class="btn-primary" onclick="trackOrder()" style="margin-top: 10px;">Rastrear Pedido</button>
+                    </div>
+                    <div id="tracking-result"></div>
+                </div>
+
+                <!-- Documentos Section -->
+                <div id="documentos" class="section">
+                    <h2>Gestión de Documentos</h2>
+                    <div class="form-group">
+                        <label for="doc-order-id">Seleccionar Pedido</label>
+                        <select id="doc-order-id">
+                            <option value="">Seleccionar pedido...</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+                        <button class="btn-secondary" onclick="generateDocument('guia')">📄 Generar Guía de Exportación</button>
+                        <button class="btn-secondary" onclick="generateDocument('factura')">🧾 Generar Factura Comercial</button>
+                        <button class="btn-secondary" onclick="generateDocument('packing')">📦 Generar Packing List</button>
+                    </div>
+                    <div id="document-preview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar pedidos -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Pedido</h2>
+            <form id="edit-form">
+                <div class="form-group">
+                    <label for="edit-status">Estado del Pedido</label>
+                    <select id="edit-status">
+                        <option value="pendiente">Pendiente</option>
+                        <option value="proceso">En Proceso</option>
+                        <option value="enviado">Enviado</option>
+                        <option value="entregado">Entregado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-tracking">Código de Seguimiento</label>
+                    <input type="text" id="edit-tracking">
+                </div>
+                <div class="form-group">
+                    <label for="edit-transport">Información de Transporte</label>
+                    <textarea id="edit-transport" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/exportaciones.js"></script>
+</body>
+</html>

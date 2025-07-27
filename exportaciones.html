@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🚚 Sistema de Gestión de Exportaciones</title>
     <link rel="stylesheet" href="./css/exportaciones.css">
+    <!-- SweetAlert CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <div class="container">
@@ -20,6 +23,7 @@
                 <button class="nav-btn" onclick="showSection('pedidos')">📋 Gestionar Pedidos</button>
                 <button class="nav-btn" onclick="showSection('seguimiento')">🔍 Seguimiento</button>
                 <button class="nav-btn" onclick="showSection('documentos')">📄 Documentos</button>
+                <button class="nav-btn" onclick="window.location.href = 'dashboard.html';">🔙 Volver al Dashboard</button>
             </nav>
 
             <div class="content">

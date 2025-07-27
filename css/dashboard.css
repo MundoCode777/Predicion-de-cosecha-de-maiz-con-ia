@@ -192,59 +192,847 @@ main {
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
 }
-/* Cuadrícula para mostrar las estadísticas del dashboard */
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Las tarjetas se adaptan al tamaño de la pantalla */
-    gap: 20px; /* Espacio entre las tarjetas */
-    margin-bottom: 30px; /* Espacio debajo de la cuadrícula */
+/*Css de exportaciones*/
+/* ===== Dashboard de Exportaciones - Diseño Moderno ===== */
+/* ===== Estadísticas Principales ===== */
+.export-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
 }
 
-/* Estilo de cada tarjeta de estadística */
 .stat-card {
-    background: linear-gradient(135deg, #74b9ff, #0984e3); /* Fondo de gradiente azul */
-    color: white; /* Color del texto */
-    padding: 25px;
-    border-radius: 15px; /* Esquinas redondeadas */
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(116, 185, 255, 0.3); /* Sombra para dar profundidad */
-    transition: transform 0.3s ease; /* Animación al pasar el cursor */
+  background: var(--primary-gradient);
+  color: white;
+  padding: 28px 24px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Estilo al pasar el cursor sobre las tarjetas */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
 .stat-card:hover {
-    transform: translateY(-5px); /* Movimiento hacia arriba */
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover);
 }
 
-/* Estilo para el número dentro de cada tarjeta */
-.stat-number {
-    font-size: 2rem; /* Tamaño grande para el número */
-    font-weight: bold; /* Negrita */
-    margin-bottom: 5px; /* Espacio debajo del número */
+.stat-card h3 {
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Estilo de la etiqueta dentro de cada tarjeta */
-.stat-label {
-    font-size: 0.9rem;
-    opacity: 0.9; /* Opacidad ligeramente reducida */
+.stat-card .number {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Estilos generales para la sección del dashboard */
-#dashboard {
-    padding: 30px; /* Espacio interior */
-    background: white; /* Fondo blanco */
-    border-radius: 20px; /* Esquinas redondeadas */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* Sombra para el contenedor */
+/* Variaciones de estados con gradientes modernos */
+.stat-card.pendiente {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
 }
 
-/* Título principal del dashboard */
-#dashboard h2 {
-    font-size: 2rem;
-    margin-bottom: 20px; /* Espacio debajo del título */
+.stat-card.proceso {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-/* Título de pedidos recientes */
-#dashboard h3 {
+.stat-card.enviado {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.stat-card.entregado {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+/* ===== Exportaciones Recientes ===== */
+.recent-exports {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: 32px;
+  margin: 32px 0;
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.recent-exports h2 {
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.recent-exports h2::before {
+  content: '📊';
+  font-size: 1.5rem;
+}
+
+.export-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  transition: var(--transition);
+  border-radius: var(--border-radius-small);
+  margin-bottom: 4px;
+}
+
+.export-item:hover {
+  background: var(--bg-hover);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-light);
+}
+
+.export-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.export-info {
+  flex-grow: 1;
+}
+
+.export-id {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+}
+
+.export-details {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ===== Badge de Estado Mejorado ===== */
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.status-pendiente {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+  color: white;
+}
+
+.status-proceso {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.status-enviado {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  color: white;
+}
+
+.status-entregado {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  color: white;
+}
+
+/* ===== Contenedor de Gráficos ===== */
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.chart-card {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: 28px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: var(--transition);
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.chart-title {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.chart-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 3px;
+  background: var(--primary-gradient);
+  border-radius: 2px;
+}
+
+/* ===== Responsive Design Mejorado ===== */
+@media (max-width: 768px) {
+  .export-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 24px 20px;
+  }
+
+  .stat-card .number {
+    font-size: 2.8rem;
+  }
+
+  .recent-exports {
+    padding: 24px 20px;
+  }
+
+  .export-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 12px;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .export-stats {
+    gap: 16px;
+  }
+
+  .stat-card {
+    padding: 20px 16px;
+  }
+
+  .stat-card .number {
+    font-size: 2.4rem;
+  }
+
+  .recent-exports h2 {
     font-size: 1.5rem;
-    margin-top: 30px;
+  }
+
+  .export-id {
+    font-size: 1rem;
+  }
+}
+
+/* ===== Animaciones Adicionales ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.export-item {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.export-item:nth-child(1) { animation-delay: 0.1s; }
+.export-item:nth-child(2) { animation-delay: 0.2s; }
+.export-item:nth-child(3) { animation-delay: 0.3s; }
+.export-item:nth-child(4) { animation-delay: 0.4s; }
+.export-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* ===== Estados de carga y vacío ===== */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state::before {
+  content: '📦';
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}/* ===== Dashboard de Exportaciones - Diseño Moderno ===== */
+/*CSS DE EXPORTACIONES*/
+/* Variables CSS para consistencia */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.18);
+  --border-radius: 16px;
+  --border-radius-small: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --text-primary: #2c3e50;
+  --text-secondary: #64748b;
+  --bg-surface: #ffffff;
+  --bg-hover: #f8fafc;
+}
+
+/* ===== Layout Principal del Contenido ===== */
+.content {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== Card de Predicción (Header) ===== */
+#cardPrediccion {
+  margin-bottom: 20px;
+}
+
+.prediccion-card {
+  background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+  color: white;
+  padding: 24px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  overflow: hidden;
+}
+
+.prediccion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
+.prediccion-card h2 {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.prediccion-card p {
+  margin: 8px 0;
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+/* ===== Gráfico de Predicción ===== */
+.grafico-prediccion {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  margin-bottom: 24px;
+}
+
+/* ===== Grid Layout Principal ===== */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ===== Estadísticas de Exportación ===== */
+.export-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--primary-gradient);
+  color: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  pointer-events: none;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-card h3 {
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-card .number {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Variaciones de estados con gradientes modernos */
+.stat-card.pendiente {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+}
+
+.stat-card.proceso {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-card.enviado {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+}
+
+.stat-card.entregado {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+/* ===== Contenedor de Gráficos ===== */
+.charts-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: var(--transition);
+  min-height: 350px;
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-medium);
+  transform: translateY(-2px);
+}
+
+.chart-title {
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.chart-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 2px;
+  background: var(--primary-gradient);
+  border-radius: 1px;
+}
+
+/* ===== Exportaciones Recientes ===== */
+.recent-exports {
+  background: var(--bg-surface);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.recent-exports h2 {
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.export-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  transition: var(--transition);
+  border-radius: var(--border-radius-small);
+  margin-bottom: 2px;
+}
+
+.export-item:hover {
+  background: var(--bg-hover);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-light);
+}
+
+.export-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.export-info {
+  flex-grow: 1;
+}
+
+.export-id {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.export-details {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* ===== Badge de Estado Mejorado ===== */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.status-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.status-pendiente {
+  background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+  color: white;
+}
+
+.status-proceso {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.status-enviado {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  color: white;
+}
+
+.status-entregado {
+  background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  color: white;
+}
+
+/* ===== Layout Específico para Dashboard ===== */
+@media (min-width: 1200px) {
+  .content {
+    display: grid;
+    grid-template-areas: 
+      "prediccion prediccion"
+      "grafico grafico"
+      "stats stats"
+      "charts charts"
+      "recent recent";
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  #cardPrediccion {
+    grid-area: prediccion;
+    margin-bottom: 0;
+  }
+
+  .grafico-prediccion {
+    grid-area: grafico;
+    margin-bottom: 0;
+  }
+
+  .export-stats {
+    grid-area: stats;
+    margin-bottom: 0;
+  }
+
+  .charts-container {
+    grid-area: charts;
+    margin-bottom: 0;
+  }
+
+  .recent-exports {
+    grid-area: recent;
+  }
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1200px) {
+  .charts-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .export-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+    gap: 20px;
+  }
+  
+  .export-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+    min-height: 100px;
+  }
+
+  .stat-card .number {
+    font-size: 1.8rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.75rem;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .chart-card {
+    padding: 16px;
+    min-height: 280px;
+  }
+
+  .prediccion-card {
+    padding: 20px;
+  }
+
+  .prediccion-card h2 {
+    font-size: 1.2rem;
+  }
+
+  .recent-exports {
+    padding: 20px;
+  }
+
+  .export-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .export-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    padding: 14px;
+    min-height: 90px;
+  }
+
+  .stat-card .number {
+    font-size: 1.6rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.7rem;
+  }
+
+  .recent-exports h2 {
+    font-size: 1.2rem;
+  }
+
+  .export-id {
+    font-size: 1rem;
+  }
+
+  .chart-card {
+    min-height: 250px;
+  }
+}
+
+/* ===== Animaciones Adicionales ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.export-item {
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.export-item:nth-child(1) { animation-delay: 0.1s; }
+.export-item:nth-child(2) { animation-delay: 0.2s; }
+.export-item:nth-child(3) { animation-delay: 0.3s; }
+.export-item:nth-child(4) { animation-delay: 0.4s; }
+.export-item:nth-child(5) { animation-delay: 0.5s; }
+
+.stat-card {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+.stat-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* ===== Estados de carga y vacío ===== */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-state::before {
+  content: '📦';
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+/* ===== Mejoras adicionales para el dashboard ===== */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

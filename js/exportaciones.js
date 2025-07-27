@@ -24,12 +24,34 @@
         });
     });
 
-    // Cargar datos de ejemplo
+    // Cargar datos guardados o datos de ejemplo
     function loadSampleData() {
-        const sampleOrders = [
-        ];
+        // Intentar cargar datos guardados del localStorage
+        const savedOrders = localStorage.getItem('exportOrders');
         
-        orders = sampleOrders;
+        if (savedOrders) {
+            try {
+                orders = JSON.parse(savedOrders);
+                console.log('Datos cargados desde localStorage:', orders.length, 'pedidos');
+            } catch (error) {
+                console.error('Error al cargar datos guardados:', error);
+                orders = [];
+            }
+        } else {
+            // Si no hay datos guardados, usar array vacío
+            orders = [];
+            console.log('No hay datos guardados, iniciando con lista vacía');
+        }
+    }
+
+    // Guardar datos en localStorage
+    function saveOrdersToStorage() {
+        try {
+            localStorage.setItem('exportOrders', JSON.stringify(orders));
+            console.log('Datos guardados en localStorage:', orders.length, 'pedidos');
+        } catch (error) {
+            console.error('Error al guardar datos:', error);
+        }
     }
 
     // Navegación entre secciones
@@ -86,6 +108,9 @@
         };
         
         orders.push(newOrder);
+        
+        // Guardar en localStorage
+        saveOrdersToStorage();
         
         // Reset form
         document.getElementById('pedido-form').reset();
@@ -255,6 +280,9 @@
         currentEditingOrder.tracking = document.getElementById('edit-tracking').value;
         currentEditingOrder.transporte = document.getElementById('edit-transport').value;
         
+        // Guardar cambios en localStorage
+        saveOrdersToStorage();
+        
         closeModal();
         updateDashboard();
         updateOrdersList();
@@ -289,6 +317,10 @@
         
         if (result.isConfirmed) {
             orders = orders.filter(o => o.id !== orderId);
+            
+            // Guardar cambios en localStorage
+            saveOrdersToStorage();
+            
             updateDashboard();
             updateOrdersList();
             populateDocumentSelect();
@@ -690,4 +722,42 @@
             reverseButtons: true
         });
         return result.isConfirmed;
+    }
+
+    // Función adicional para limpiar todos los datos (opcional)
+    async function clearAllData() {
+        const result = await Swal.fire({
+            title: '⚠️ ¿Limpiar todos los datos?',
+            text: "Esta acción eliminará TODOS los pedidos permanentemente",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, limpiar todo',
+            cancelButtonText: 'Cancelar',
+            input: 'text',
+            inputPlaceholder: 'Escribe "CONFIRMAR" para continuar',
+            preConfirm: (inputValue) => {
+                if (inputValue !== 'CONFIRMAR') {
+                    Swal.showValidationMessage('Debes escribir "CONFIRMAR" exactamente');
+                    return false;
+                }
+                return true;
+            }
+        });
+        
+        if (result.isConfirmed) {
+            orders = [];
+            localStorage.removeItem('exportOrders');
+            updateDashboard();
+            updateOrdersList();
+            populateDocumentSelect();
+            
+            Swal.fire({
+                title: '¡Datos eliminados!',
+                text: 'Todos los pedidos han sido eliminados',
+                icon: 'success',
+                timer: 2000
+            });
+        }
     }

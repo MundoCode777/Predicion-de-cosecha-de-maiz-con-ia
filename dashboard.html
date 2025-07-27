@@ -10,7 +10,7 @@
   <div class="dashboard">
     <aside class="sidebar">
       <div class="logo">🍌 BananoSys</div>
-      <span id="userNameDisplay" class="user-name">Cargando...</span> <!-- Aquí va el nombre del usuario -->
+      <span id="userNameDisplay" class="user-name">Cargando...</span>
       <ul>
         <li><a href="prediccion.html" class="menu-link">🌾 <span>Predicción</span></a></li>
         <li><a href="exportaciones.html" class="menu-link">🚚 <span>Gestión de Exportaciones</span></a></li>
@@ -28,34 +28,55 @@
         <h1>Panel de Control de Banano</h1>
       </header>
       <section id="contenido" class="content fade-in">
+        <!-- Predicción existente -->
         <div id="cardPrediccion"></div>
         <div class="grafico-prediccion">
           <div id="graficoPrediccion" style="height: 300px;"></div>
         </div>
-        <!-- Dashboard Section -->
-                <div id="dashboard" class="section active">
-                    <h2>Dashboard de Exportaciones</h2>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-number" id="total-pedidos">0</div>
-                            <div class="stat-label">Total Pedidos</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="pedidos-pendientes">0</div>
-                            <div class="stat-label">Pendientes</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="pedidos-enviados">0</div>
-                            <div class="stat-label">Enviados</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" id="pedidos-entregados">0</div>
-                            <div class="stat-label">Entregados</div>
-                        </div>
-                    </div>
-                    <h3>Pedidos Recientes</h3>
-                    <div id="recent-orders"></div>
-                </div>
+
+        <!-- Nuevas métricas de exportaciones -->
+        <div class="export-stats">
+          <div class="stat-card">
+            <h3>📊 Total Pedidos</h3>
+            <div class="number" id="totalPedidos">0</div>
+          </div>
+          <div class="stat-card pendiente">
+            <h3>⏳ Pendientes</h3>
+            <div class="number" id="pedidosPendientes">0</div>
+          </div>
+          <div class="stat-card proceso">
+            <h3>🔄 En Proceso</h3>
+            <div class="number" id="pedidosProceso">0</div>
+          </div>
+          <div class="stat-card enviado">
+            <h3>🚚 Enviados</h3>
+            <div class="number" id="pedidosEnviados">0</div>
+          </div>
+          <div class="stat-card entregado">
+            <h3>✅ Entregados</h3>
+            <div class="number" id="pedidosEntregados">0</div>
+          </div>
+        </div>
+
+        <!-- Gráficos de exportaciones -->
+        <div class="charts-container">
+          <div class="chart-card">
+            <div class="chart-title">📈 Estados de Pedidos</div>
+            <div id="estadosChart" style="height: 300px;"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">🌍 Destinos Principales</div>
+            <div id="destinosChart" style="height: 300px;"></div>
+          </div>
+        </div>
+
+        <!-- Exportaciones recientes -->
+        <div class="recent-exports">
+          <h2>🚚 Exportaciones Recientes</h2>
+          <div id="recentExports">
+            <p style="text-align: center; color: #7f8c8d; padding: 20px;">No hay exportaciones registradas</p>
+          </div>
+        </div>
       </section>
     </main>
   </div>
@@ -77,7 +98,6 @@
           const displayName = user.displayName || user.email;
           userNameDisplay.textContent = `👤 ${displayName}`;
         } else {
-          // Si no hay usuario autenticado, redirigir a login
           window.location.href = 'login.html';
         }
       });
@@ -101,7 +121,7 @@
         });
       }
 
-      // Mostrar última predicción
+      // Mostrar última predicción (código existente)
       const cardContainer = document.getElementById('cardPrediccion');
       const prediccion = localStorage.getItem("ultimaPrediccion");
       if (prediccion) {
@@ -114,7 +134,7 @@
           </div>
         `;
 
-        // Mostrar gráfico
+        // Mostrar gráfico de predicción
         var myChart = echarts.init(document.getElementById('graficoPrediccion'));
         var option = {
           title: {
@@ -166,6 +186,165 @@
         };
         myChart.setOption(option);
       }
+
+      // ===== NUEVA FUNCIONALIDAD DE EXPORTACIONES =====
+      
+      // Cargar datos de exportaciones
+      function loadExportData() {
+        const savedOrders = localStorage.getItem('exportOrders');
+        if (savedOrders) {
+          try {
+            return JSON.parse(savedOrders);
+          } catch (error) {
+            console.error('Error al cargar datos de exportaciones:', error);
+            return [];
+          }
+        }
+        return [];
+      }
+
+      // Actualizar métricas de exportaciones
+      function updateExportMetrics() {
+        const orders = loadExportData();
+        
+        const stats = {
+          total: orders.length,
+          pendiente: orders.filter(o => o.estado === 'pendiente').length,
+          proceso: orders.filter(o => o.estado === 'proceso').length,
+          enviado: orders.filter(o => o.estado === 'enviado').length,
+          entregado: orders.filter(o => o.estado === 'entregado').length
+        };
+
+        // Actualizar números en las tarjetas
+        document.getElementById('totalPedidos').textContent = stats.total;
+        document.getElementById('pedidosPendientes').textContent = stats.pendiente;
+        document.getElementById('pedidosProceso').textContent = stats.proceso;
+        document.getElementById('pedidosEnviados').textContent = stats.enviado;
+        document.getElementById('pedidosEntregados').textContent = stats.entregado;
+
+        // Crear gráfico de estados
+        createStatesChart(stats);
+        
+        // Crear gráfico de destinos
+        createDestinationsChart(orders);
+        
+        // Mostrar exportaciones recientes
+        showRecentExports(orders);
+      }
+
+      // Crear gráfico de estados
+      function createStatesChart(stats) {
+        const chart = echarts.init(document.getElementById('estadosChart'));
+        const option = {
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+          },
+          series: [{
+            name: 'Estados',
+            type: 'pie',
+            radius: '70%',
+            data: [
+              {value: stats.pendiente, name: 'Pendientes', itemStyle: {color: '#f39c12'}},
+              {value: stats.proceso, name: 'En Proceso', itemStyle: {color: '#3498db'}},
+              {value: stats.enviado, name: 'Enviados', itemStyle: {color: '#9b59b6'}},
+              {value: stats.entregado, name: 'Entregados', itemStyle: {color: '#27ae60'}}
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }]
+        };
+        chart.setOption(option);
+      }
+
+      // Crear gráfico de destinos
+      function createDestinationsChart(orders) {
+        const destinations = {};
+        orders.forEach(order => {
+          destinations[order.paisDestino] = (destinations[order.paisDestino] || 0) + 1;
+        });
+
+        const sortedDestinations = Object.entries(destinations)
+          .sort(([,a], [,b]) => b - a)
+          .slice(0, 6);
+
+        const chart = echarts.init(document.getElementById('destinosChart'));
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          xAxis: {
+            type: 'category',
+            data: sortedDestinations.map(([pais]) => pais),
+            axisLabel: {
+              interval: 0,
+              rotate: 45,
+              color: '#7f8c8d'
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: {
+              color: '#7f8c8d'
+            }
+          },
+          series: [{
+            data: sortedDestinations.map(([, cantidad]) => cantidad),
+            type: 'bar',
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                {offset: 0, color: '#667eea'},
+                {offset: 1, color: '#764ba2'}
+              ])
+            }
+          }]
+        };
+        chart.setOption(option);
+      }
+
+      // Mostrar exportaciones recientes
+      function showRecentExports(orders) {
+        const recentOrders = orders
+          .sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion))
+          .slice(0, 5);
+
+        const container = document.getElementById('recentExports');
+        
+        if (recentOrders.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 20px;">No hay exportaciones registradas</p>';
+          return;
+        }
+
+        const html = recentOrders.map(order => `
+          <div class="export-item">
+            <div class="export-info">
+              <div class="export-id">${order.id}</div>
+              <div class="export-details">
+                ${order.cliente} • ${order.paisDestino} • ${order.variedad} • ${order.cantidad.toLocaleString()} unidades
+              </div>
+            </div>
+            <div class="status-badge status-${order.estado}">
+              ${order.estado.toUpperCase()}
+            </div>
+          </div>
+        `).join('');
+
+        container.innerHTML = html;
+      }
+
+      // Inicializar datos de exportaciones
+      updateExportMetrics();
+
+      // Actualizar cada 30 segundos por si hay cambios
+      setInterval(updateExportMetrics, 30000);
     });
   </script>
 </body>

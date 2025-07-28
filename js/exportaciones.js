@@ -514,7 +514,7 @@
     // Generar factura comercial
     function generateCommercialInvoice(order) {
         const subtotal = order.cantidad * order.precioUnitario;
-        const tax = subtotal * 0.12; // IVA 12%
+        const tax = subtotal * 0.15; // IVA 15%
         const total = subtotal + tax;
         
         return `
@@ -554,7 +554,7 @@
             </table>
             <div style="text-align: right; margin-top: 20px;">
                 <p><strong>Subtotal: ${subtotal.toFixed(2)}</strong></p>
-                <p><strong>IVA (12%): ${tax.toFixed(2)}</strong></p>
+                <p><strong>IVA (15%): ${tax.toFixed(2)}</strong></p>
                 <p style="font-size: 1.2em; color: #2c3e50;"><strong>TOTAL: ${total.toFixed(2)} USD</strong></p>
             </div>
         `;

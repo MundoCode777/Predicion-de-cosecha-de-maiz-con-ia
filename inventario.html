@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Inventario y Postcosecha</title>
+    <link rel="stylesheet" href="./css/inventario.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-warehouse"></i> Gestión de Inventario y Postcosecha</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="abrirModal()">
+                    <i class="fas fa-plus"></i> Nuevo Lote
+                </button>
+                <button class="btn btn-secondary" onclick="exportarDatos()">
+                    <i class="fas fa-download"></i> Exportar
+                </button>
+            </div>
+        </header>
+
+        <!-- Panel de Filtros y Búsqueda -->
+        <div class="filtros-panel">
+            <div class="filtros-grid">
+                <div class="filtro-grupo">
+                    <label for="busqueda">Buscar por lote o finca:</label>
+                    <input type="text" id="busqueda" placeholder="Ingrese código de lote o nombre de finca..." onkeyup="filtrarLotes()">
+                </div>
+                <div class="filtro-grupo">
+                    <label for="filtroEstado">Estado:</label>
+                    <select id="filtroEstado" onchange="filtrarLotes()">
+                        <option value="">Todos</option>
+                        <option value="disponible">Disponible</option>
+                        <option value="reservado">Reservado</option>
+                        <option value="exportado">Exportado</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label for="filtroCalidad">Calidad:</label>
+                    <select id="filtroCalidad" onchange="filtrarLotes()">
+                        <option value="">Todas</option>
+                        <option value="excelente">Excelente</option>
+                        <option value="buena">Buena</option>
+                        <option value="regular">Regular</option>
+                        <option value="rechazada">Rechazada</option>
+                    </select>
+                </div>
+                <div class="filtro-grupo">
+                    <label for="ordenamiento">Ordenar por:</label>
+                    <select id="ordenamiento" onchange="ordenarLotes()">
+                        <option value="fecha_asc">Fecha (FIFO)</option>
+                        <option value="fecha_desc">Fecha (más reciente)</option>
+                        <option value="peso_desc">Peso (mayor)</option>
+                        <option value="lote">Código de lote</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas Resumen -->
+        <div class="estadisticas">
+            <div class="stat-card">
+                <i class="fas fa-boxes"></i>
+                <div class="stat-info">
+                    <h3 id="totalLotes">0</h3>
+                    <p>Total Lotes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-weight-hanging"></i>
+                <div class="stat-info">
+                    <h3 id="pesoTotal">0 kg</h3>
+                    <p>Peso Total</p>
+                </div>
+            </div>
+            <div class="stat-card disponible">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-info">
+                    <h3 id="disponibles">0</h3>
+                    <p>Disponibles</p>
+                </div>
+            </div>
+            <div class="stat-card reservado">
+                <i class="fas fa-clock"></i>
+                <div class="stat-info">
+                    <h3 id="reservados">0</h3>
+                    <p>Reservados</p>
+                </div>
+            </div>
+            <div class="stat-card exportado">
+                <i class="fas fa-shipping-fast"></i>
+                <div class="stat-info">
+                    <h3 id="exportados">0</h3>
+                    <p>Exportados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Lotes -->
+        <div class="tabla-container">
+            <table class="tabla-lotes">
+                <thead>
+                    <tr>
+                        <th>Código Lote</th>
+                        <th>Finca</th>
+                        <th>Fecha Cosecha</th>
+                        <th>Peso (kg)</th>
+                        <th>Estado</th>
+                        <th>Calidad</th>
+                        <th>Color</th>
+                        <th>Tamaño</th>
+                        <th>Plagas</th>
+                        <th>Días Almacenado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaLotes">
+                    <!-- Los lotes se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mensaje cuando no hay datos -->
+        <div id="mensajeVacio" class="mensaje-vacio" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3>No hay lotes registrados</h3>
+            <p>Comience agregando un nuevo lote al sistema</p>
+        </div>
+    </div>
+
+    <!-- Modal para Agregar/Editar Lote -->
+    <div id="modalLote" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitulo">Agregar Nuevo Lote</h2>
+                <span class="close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <form id="formLote" class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="codigoLote">Código de Lote *</label>
+                        <input type="text" id="codigoLote" required placeholder="Ej: LOT-2024-001">
+                    </div>
+                    <div class="form-group">
+                        <label for="finca">Finca *</label>
+                        <input type="text" id="finca" required placeholder="Nombre de la finca">
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaCosecha">Fecha de Cosecha *</label>
+                        <input type="date" id="fechaCosecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="peso">Peso (kg) *</label>
+                        <input type="number" id="peso" step="0.1" min="0" required placeholder="0.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select id="estado">
+                            <option value="disponible">Disponible</option>
+                            <option value="reservado">Reservado</option>
+                            <option value="exportado">Exportado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="calidad">Calidad Postcosecha *</label>
+                        <select id="calidad" required>
+                            <option value="">Seleccionar...</option>
+                            <option value="excelente">Excelente</option>
+                            <option value="buena">Buena</option>
+                            <option value="regular">Regular</option>
+                            <option value="rechazada">Rechazada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <select id="color">
+                            <option value="verde">Verde</option>
+                            <option value="amarillo">Amarillo</option>
+                            <option value="rojo">Rojo</option>
+                            <option value="mixto">Mixto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tamano">Tamaño Promedio</label>
+                        <select id="tamano">
+                            <option value="pequeño">Pequeño</option>
+                            <option value="mediano">Mediano</option>
+                            <option value="grande">Grande</option>
+                            <option value="extra_grande">Extra Grande</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="plagas">Presencia de Plagas</label>
+                        <select id="plagas">
+                            <option value="ninguna">Ninguna</option>
+                            <option value="leve">Leve</option>
+                            <option value="moderada">Moderada</option>
+                            <option value="severa">Severa</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="notas">Notas Adicionales</label>
+                        <textarea id="notas" rows="3" placeholder="Observaciones adicionales..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Lote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/inventario.js"></script>
+</body>
+</html>

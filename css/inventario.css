@@ -631,3 +631,67 @@ body {
         font-size: 11px;
     }
 }
+
+/* Estilos personalizados para SweetAlert2 */
+.swal-popup-custom {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
+}
+
+.swal-wide {
+    width: 600px !important;
+    max-width: 90vw !important;
+}
+
+.swal-btn-custom {
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    padding: 12px 24px !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.swal-btn-custom:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.swal-toast-custom {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+}
+
+/* Personalización adicional para temas del sistema */
+.swal2-popup.swal2-modal {
+    background: var(--white) !important;
+    color: var(--text-dark) !important;
+}
+
+.swal2-title {
+    color: var(--text-dark) !important;
+    font-weight: 600 !important;
+}
+
+.swal2-content {
+    color: var(--text-light) !important;
+}
+
+.swal2-confirm {
+    background: var(--primary-color) !important;
+    border: none !important;
+}
+
+.swal2-confirm:hover {
+    background: var(--secondary-color) !important;
+}
+
+.swal2-cancel {
+    background: #6c757d !important;
+    border: none !important;
+}
+
+.swal2-cancel:hover {
+    background: #5a6268 !important;
+}

@@ -1,4 +1,4 @@
-// Sistema de Gestión de Inventario y Postcosecha
+// Sistema de Gestión de Inventario y Postcosecha con SweetAlert2
 class SistemaInventario {
     constructor() {
         this.lotes = this.cargarDatos() || [];
@@ -42,43 +42,146 @@ class SistemaInventario {
 
     // Gestión de datos
     cargarDatos() {
-        const datos = window.__inventarioData || [];
-        return datos;
+        try {
+            // Cargar desde localStorage
+            const datosGuardados = localStorage.getItem('inventario_postcosecha');
+            if (datosGuardados) {
+                const datos = JSON.parse(datosGuardados);
+                console.log('Datos cargados desde localStorage:', datos.length, 'lotes');
+                return datos;
+            }
+            
+            // Si no hay datos guardados, devolver array vacío
+            console.log('No hay datos guardados, iniciando array vacío');
+            return [];
+        } catch (error) {
+            console.error('Error al cargar datos:', error);
+            // Si hay error, intentar limpiar localStorage corrupto
+            localStorage.removeItem('inventario_postcosecha');
+            return [];
+        }
     }
 
     guardarDatos() {
-        window.__inventarioData = this.lotes;
+        try {
+            // Guardar en localStorage
+            localStorage.setItem('inventario_postcosecha', JSON.stringify(this.lotes));
+            console.log('✅ Datos guardados en localStorage:', this.lotes.length, 'lotes');
+            
+            // También mantener en memoria como respaldo
+            window.__inventarioData = [...this.lotes];
+        } catch (error) {
+            console.error('❌ Error al guardar datos:', error);
+            
+            // Si localStorage está lleno, mostrar alerta
+            if (error.name === 'QuotaExceededError') {
+                Swal.fire({
+                    title: 'Almacenamiento lleno',
+                    text: 'No se pueden guardar más datos. Considere exportar y limpiar datos antiguos.',
+                    icon: 'warning'
+                });
+            }
+        }
     }
 
     // CRUD de lotes
     agregarLote(lote) {
-        // Generar ID único
-        lote.id = Date.now().toString();
-        lote.fechaRegistro = new Date().toISOString();
-        this.lotes.push(lote);
-        this.guardarDatos();
-        this.actualizarTabla();
-        this.actualizarEstadisticas();
-    }
-
-    editarLote(id, loteActualizado) {
-        const index = this.lotes.findIndex(l => l.id === id);
-        if (index !== -1) {
-            loteActualizado.id = id;
-            loteActualizado.fechaRegistro = this.lotes[index].fechaRegistro;
-            this.lotes[index] = loteActualizado;
+        try {
+            // Generar ID único
+            lote.id = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 9);
+            lote.fechaRegistro = new Date().toISOString();
+            
+            // Agregar al array
+            this.lotes.push(lote);
+            
+            // Guardar datos
             this.guardarDatos();
+            
+            // Actualizar interfaz
             this.actualizarTabla();
             this.actualizarEstadisticas();
+            
+            console.log('Lote agregado:', lote.codigoLote, '- Total lotes:', this.lotes.length);
+        } catch (error) {
+            console.error('Error al agregar lote:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo agregar el lote. Intente nuevamente.',
+                icon: 'error'
+            });
         }
     }
 
-    eliminarLote(id) {
-        if (confirm('¿Está seguro de eliminar este lote? Esta acción no se puede deshacer.')) {
-            this.lotes = this.lotes.filter(l => l.id !== id);
-            this.guardarDatos();
-            this.actualizarTabla();
-            this.actualizarEstadisticas();
+    editarLote(id, loteActualizado) {
+        try {
+            const index = this.lotes.findIndex(l => l.id === id);
+            if (index !== -1) {
+                loteActualizado.id = id;
+                loteActualizado.fechaRegistro = this.lotes[index].fechaRegistro;
+                this.lotes[index] = loteActualizado;
+                
+                this.guardarDatos();
+                this.actualizarTabla();
+                this.actualizarEstadisticas();
+                
+                console.log('Lote editado:', loteActualizado.codigoLote);
+            }
+        } catch (error) {
+            console.error('Error al editar lote:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo actualizar el lote. Intente nuevamente.',
+                icon: 'error'
+            });
+        }
+    }
+
+    async eliminarLote(id) {
+        try {
+            const lote = this.lotes.find(l => l.id === id);
+            if (!lote) {
+                Swal.fire('Error', 'Lote no encontrado', 'error');
+                return;
+            }
+            
+            const result = await Swal.fire({
+                title: '¿Está seguro?',
+                html: `¿Desea eliminar el lote <strong>${lote.codigoLote}</strong>?<br><small>Esta acción no se puede deshacer</small>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true
+            });
+
+            if (result.isConfirmed) {
+                // Filtrar el lote a eliminar
+                this.lotes = this.lotes.filter(l => l.id !== id);
+                
+                // Guardar cambios
+                this.guardarDatos();
+                this.actualizarTabla();
+                this.actualizarEstadisticas();
+                
+                console.log('Lote eliminado:', lote.codigoLote, '- Total lotes:', this.lotes.length);
+                
+                Swal.fire({
+                    title: '¡Eliminado!',
+                    text: `El lote ${lote.codigoLote} ha sido eliminado correctamente`,
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        } catch (error) {
+            console.error('Error al eliminar lote:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo eliminar el lote. Intente nuevamente.',
+                icon: 'error'
+            });
         }
     }
 
@@ -133,7 +236,7 @@ class SistemaInventario {
         document.getElementById('plagas').value = 'ninguna';
     }
 
-    guardarLote() {
+    async guardarLote() {
         const formulario = document.getElementById('formLote');
         if (!formulario.checkValidity()) {
             formulario.reportValidity();
@@ -160,14 +263,35 @@ class SistemaInventario {
         );
 
         if (codigoExiste) {
-            alert('Ya existe un lote con este código. Por favor, use un código diferente.');
+            Swal.fire({
+                title: 'Código duplicado',
+                text: 'Ya existe un lote con este código. Por favor, use un código diferente.',
+                icon: 'error',
+                confirmButtonText: 'Entendido'
+            });
             return;
         }
 
         if (this.loteEditando) {
             this.editarLote(this.loteEditando, lote);
+            
+            Swal.fire({
+                title: '¡Actualizado!',
+                text: `El lote ${lote.codigoLote} ha sido actualizado correctamente`,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
         } else {
             this.agregarLote(lote);
+            
+            Swal.fire({
+                title: '¡Agregado!',
+                text: `El lote ${lote.codigoLote} ha sido agregado correctamente`,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
         }
 
         this.cerrarModal();
@@ -285,27 +409,78 @@ class SistemaInventario {
     }
 
     // Funciones auxiliares
-    cambiarEstado(id) {
-        const lote = this.lotes.find(l => l.id === id);
-        if (!lote) return;
+    async cambiarEstado(id) {
+        try {
+            const lote = this.lotes.find(l => l.id === id);
+            if (!lote) return;
 
-        let nuevoEstado;
-        switch (lote.estado) {
-            case 'disponible':
-                nuevoEstado = 'reservado';
-                break;
-            case 'reservado':
-                nuevoEstado = 'exportado';
-                break;
-            case 'exportado':
-                nuevoEstado = 'disponible';
-                break;
+            let nuevoEstado;
+            let mensaje;
+            let icono;
+
+            switch (lote.estado) {
+                case 'disponible':
+                    nuevoEstado = 'reservado';
+                    mensaje = '¿Desea marcar este lote como <strong>reservado</strong>?';
+                    icono = 'warning';
+                    break;
+                case 'reservado':
+                    nuevoEstado = 'exportado';
+                    mensaje = '¿Desea marcar este lote como <strong>exportado</strong>?';
+                    icono = 'question';
+                    break;
+                case 'exportado':
+                    nuevoEstado = 'disponible';
+                    mensaje = '¿Desea marcar este lote como <strong>disponible</strong> nuevamente?';
+                    icono = 'info';
+                    break;
+            }
+
+            const result = await Swal.fire({
+                title: 'Cambiar estado',
+                html: `Lote: <strong>${lote.codigoLote}</strong><br>${mensaje}`,
+                icon: icono,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, cambiar',
+                cancelButtonText: 'Cancelar'
+            });
+
+            if (result.isConfirmed) {
+                lote.estado = nuevoEstado;
+                this.guardarDatos();
+                this.actualizarTabla();
+                this.actualizarEstadisticas();
+
+                console.log('Estado cambiado:', lote.codigoLote, 'a', nuevoEstado);
+
+                // Toast de confirmación
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success',
+                    title: `Estado cambiado a ${this.formatearEstado(nuevoEstado)}`
+                });
+            }
+        } catch (error) {
+            console.error('Error al cambiar estado:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo cambiar el estado. Intente nuevamente.',
+                icon: 'error'
+            });
         }
-
-        lote.estado = nuevoEstado;
-        this.guardarDatos();
-        this.actualizarTabla();
-        this.actualizarEstadisticas();
     }
 
     calcularDiasAlmacenado(fechaCosecha) {
@@ -380,28 +555,54 @@ class SistemaInventario {
     }
 
     // Exportar datos
-    exportarDatos() {
+    async exportarDatos() {
         if (this.lotes.length === 0) {
-            alert('No hay datos para exportar');
+            Swal.fire({
+                title: 'Sin datos',
+                text: 'No hay datos para exportar',
+                icon: 'info',
+                confirmButtonText: 'Entendido'
+            });
             return;
         }
 
-        const datosExportar = this.lotes.map(lote => ({
-            'Código Lote': lote.codigoLote,
-            'Finca': lote.finca,
-            'Fecha Cosecha': lote.fechaCosecha,
-            'Peso (kg)': lote.peso,
-            'Estado': this.formatearEstado(lote.estado),
-            'Calidad': this.formatearCalidad(lote.calidad),
-            'Color': this.formatearColor(lote.color),
-            'Tamaño': this.formatearTamano(lote.tamano),
-            'Plagas': this.formatearPlagas(lote.plagas),
-            'Días Almacenado': this.calcularDiasAlmacenado(lote.fechaCosecha),
-            'Notas': lote.notas || ''
-        }));
+        // Mostrar loading
+        Swal.fire({
+            title: 'Exportando datos...',
+            html: 'Preparando archivo CSV',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
-        const csv = this.convertirACSV(datosExportar);
-        this.descargarCSV(csv, 'inventario_postcosecha.csv');
+        // Simular proceso de exportación
+        setTimeout(() => {
+            const datosExportar = this.lotes.map(lote => ({
+                'Código Lote': lote.codigoLote,
+                'Finca': lote.finca,
+                'Fecha Cosecha': lote.fechaCosecha,
+                'Peso (kg)': lote.peso,
+                'Estado': this.formatearEstado(lote.estado),
+                'Calidad': this.formatearCalidad(lote.calidad),
+                'Color': this.formatearColor(lote.color),
+                'Tamaño': this.formatearTamano(lote.tamano),
+                'Plagas': this.formatearPlagas(lote.plagas),
+                'Días Almacenado': this.calcularDiasAlmacenado(lote.fechaCosecha),
+                'Notas': lote.notas || ''
+            }));
+
+            const csv = this.convertirACSV(datosExportar);
+            this.descargarCSV(csv, 'inventario_postcosecha.csv');
+
+            Swal.fire({
+                title: '¡Exportado!',
+                text: `Se han exportado ${this.lotes.length} registros correctamente`,
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }, 1000);
     }
 
     convertirACSV(datos) {
@@ -437,7 +638,7 @@ class SistemaInventario {
     }
 
     // Generar datos de ejemplo para demostración
-    generarDatosEjemplo() {
+    async generarDatosEjemplo() {
         const ejemplos = [
             {
                 codigoLote: 'LOT-2024-001',
@@ -477,7 +678,59 @@ class SistemaInventario {
             }
         ];
 
+        // Mostrar notificación de datos de ejemplo
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
+
+        Toast.fire({
+            icon: 'info',
+            title: 'Datos cargados'
+        });
+
         ejemplos.forEach(ejemplo => this.agregarLote(ejemplo));
+    }
+
+    // Método para limpiar todos los datos (útil para development/testing)
+    limpiarTodosLosDatos() {
+        Swal.fire({
+            title: '⚠️ ¡Atención!',
+            html: 'Esta acción eliminará <strong>TODOS</strong> los lotes guardados.<br><small>Esta acción no se puede deshacer</small>',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar todo',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Limpiar localStorage
+                localStorage.removeItem('inventario_postcosecha');
+                
+                // Limpiar memoria
+                this.lotes = [];
+                window.__inventarioData = [];
+                
+                // Actualizar interfaz
+                this.actualizarTabla();
+                this.actualizarEstadisticas();
+                
+                Swal.fire({
+                    title: '¡Datos eliminados!',
+                    text: 'Todos los datos han sido eliminados correctamente',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                
+                console.log('🗑️ Todos los datos han sido eliminados');
+            }
+        });
     }
 }
 
@@ -504,12 +757,41 @@ function exportarDatos() {
     sistemaInventario.exportarDatos();
 }
 
+// Función para limpiar datos (útil para testing)
+function limpiarDatos() {
+    if (sistemaInventario) {
+        sistemaInventario.limpiarTodosLosDatos();
+    }
+}
+
 // Inicializar el sistema cuando se carga la página
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando sistema de inventario...');
+    
     sistemaInventario = new SistemaInventario();
     
-    // Generar datos de ejemplo si no hay datos (solo para demostración)
-    if (sistemaInventario.lotes.length === 0) {
+    const totalLotes = sistemaInventario.lotes.length;
+    console.log('📦 Sistema iniciado con', totalLotes, 'lotes cargados');
+    
+    // Solo generar datos de ejemplo si NO hay ningún dato guardado
+    if (totalLotes === 0) {
+        console.log('📝 No hay datos guardados, generando datos de ejemplo...');
         sistemaInventario.generarDatosEjemplo();
+    } else {
+        console.log('✅ Datos existentes cargados correctamente desde localStorage');
+        
+        // Mostrar toast de bienvenida con datos cargados
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: `${totalLotes} lotes cargados correctamente`
+        });
     }
 });

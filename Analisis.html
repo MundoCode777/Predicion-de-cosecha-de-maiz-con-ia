@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Estadístico de Producción</title>
+    <link rel="stylesheet" href="./css/Analisis.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header animate-fade-in">
+            <h1>📈 Análisis Estadístico de Producción</h1>
+            <p>Visualización del rendimiento histórico del cultivo y detección de patrones</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Año:</label>
+                    <select id="yearFilter">
+                        <option value="all">Todos los años</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Finca:</label>
+                    <select id="fincaFilter">
+                        <option value="all">Todas las fincas</option>
+                        <option value="norte">Finca Norte</option>
+                        <option value="sur">Finca Sur</option>
+                        <option value="este">Finca Este</option>
+                        <option value="oeste">Finca Oeste</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Cultivo:</label>
+                    <select id="cultivoFilter">
+                        <option value="all">Todos los cultivos</option>
+                        <option value="maiz">Maíz</option>
+                        <option value="arroz">Arroz</option>
+                        <option value="soja">Soja</option>
+                        <option value="trigo">Trigo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="export-buttons">
+                <button class="btn btn-primary" onclick="exportToPDF()">📄 Exportar PDF</button>
+                <button class="btn btn-secondary" onclick="exportToExcel()">📊 Exportar Excel</button>
+            </div>
+        </div>
+
+        <div class="metrics-grid animate-fade-in">
+            <div class="metric-card">
+                <div class="metric-value" id="totalProduction">0</div>
+                <div class="metric-label">Kg Totales</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="avgYield">0</div>
+                <div class="metric-label">Kg/Hectárea</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="exportPercent">0%</div>
+                <div class="metric-label">% Exportado</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="totalFarms">0</div>
+                <div class="metric-label">Fincas Activas</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card animate-fade-in">
+                <h3>📊 Producción Mensual</h3>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in">
+                <h3>📈 Comparativa por Años</h3>
+                <div class="chart-container">
+                    <canvas id="yearlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in">
+                <h3>🏢 Producción por Fincas</h3>
+                <div class="chart-container chart-small">
+                    <canvas id="farmsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in">
+                <h3>🌾 Distribución por Cultivos</h3>
+                <div class="chart-container chart-small">
+                    <canvas id="cropsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in">
+                <h3>📤 Exportación vs Nacional</h3>
+                <div class="chart-container chart-small">
+                    <canvas id="exportChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card animate-fade-in">
+                <h3>💰 Rendimiento por Hectárea</h3>
+                <div class="chart-container">
+                    <canvas id="yieldChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card animate-fade-in">
+            <h3>📋 Tabla de Datos Detallados</h3>
+            <div class="data-table">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Año</th>
+                            <th>Finca</th>
+                            <th>Cultivo</th>
+                            <th>Producción (Kg)</th>
+                            <th>Hectáreas</th>
+                            <th>Kg/Hectárea</th>
+                            <th>Exportado (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <p>⏳ Procesando datos...</p>
+        </div>
+    </div>
+
+    <script src="./js/Analisis.js"></script>
+</body>
+</html>

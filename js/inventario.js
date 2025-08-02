@@ -33,6 +33,27 @@ class SistemaInventario {
                 this.cerrarModal();
             }
         });
+
+        // Evento para mostrar/ocultar selector de plagas específicas
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'plagas') {
+                this.manejarCambioPlagas(e.target.value);
+            }
+        });
+    }
+
+    manejarCambioPlagas(valorPlagas) {
+        const contenedorPlagasEspecificas = document.getElementById('contenedorPlagasEspecificas');
+        const selectPlagasEspecificas = document.getElementById('plagasEspecificas');
+        
+        if (valorPlagas === 'plaga') {
+            contenedorPlagasEspecificas.style.display = 'block';
+            selectPlagasEspecificas.required = true;
+        } else {
+            contenedorPlagasEspecificas.style.display = 'none';
+            selectPlagasEspecificas.required = false;
+            selectPlagasEspecificas.value = '';
+        }
     }
 
     establecerFechaActual() {
@@ -226,6 +247,12 @@ class SistemaInventario {
         document.getElementById('tamano').value = lote.tamano;
         document.getElementById('plagas').value = lote.plagas;
         document.getElementById('notas').value = lote.notas || '';
+        
+        // Manejar campo de plagas específicas
+        if (lote.plagas === 'plaga' && lote.plagaEspecifica) {
+            document.getElementById('plagasEspecificas').value = lote.plagaEspecifica;
+            this.manejarCambioPlagas('plaga');
+        }
     }
 
     limpiarFormulario() {
@@ -234,6 +261,13 @@ class SistemaInventario {
         document.getElementById('color').value = 'verde';
         document.getElementById('tamano').value = 'mediano';
         document.getElementById('plagas').value = 'ninguna';
+        
+        // Ocultar campo de plagas específicas
+        const contenedorPlagasEspecificas = document.getElementById('contenedorPlagasEspecificas');
+        if (contenedorPlagasEspecificas) {
+            contenedorPlagasEspecificas.style.display = 'none';
+            document.getElementById('plagasEspecificas').required = false;
+        }
     }
 
     async guardarLote() {
@@ -255,6 +289,21 @@ class SistemaInventario {
             plagas: document.getElementById('plagas').value,
             notas: document.getElementById('notas').value.trim()
         };
+
+        // Si hay plaga específica, agregarla al objeto
+        if (lote.plagas === 'plaga') {
+            const plagaEspecifica = document.getElementById('plagasEspecificas').value;
+            if (!plagaEspecifica) {
+                Swal.fire({
+                    title: 'Campo requerido',
+                    text: 'Por favor seleccione el tipo de plaga específica.',
+                    icon: 'warning',
+                    confirmButtonText: 'Entendido'
+                });
+                return;
+            }
+            lote.plagaEspecifica = plagaEspecifica;
+        }
 
         // Validar código único (excepto en edición)
         const codigoExiste = this.lotes.some(l => 
@@ -322,7 +371,7 @@ class SistemaInventario {
                 <td><span class="calidad-badge calidad-${lote.calidad}">${this.formatearCalidad(lote.calidad)}</span></td>
                 <td><span class="color-badge">${this.formatearColor(lote.color)}</span></td>
                 <td>${this.formatearTamano(lote.tamano)}</td>
-                <td><span class="plagas-badge plagas-${lote.plagas}">${this.formatearPlagas(lote.plagas)}</span></td>
+                <td><span class="plagas-badge plagas-${lote.plagas}">${this.formatearPlagas(lote)}</span></td>
                 <td><span class="dias-almacenado ${this.obtenerClaseDias(lote.fechaCosecha)}">${this.calcularDiasAlmacenado(lote.fechaCosecha)} días</span></td>
                 <td>
                     <div style="display: flex; gap: 5px; flex-wrap: wrap;">
@@ -544,14 +593,19 @@ class SistemaInventario {
         return tamanos[tamano] || tamano;
     }
 
-    formatearPlagas(plagas) {
-        const plagasTexto = {
-            'ninguna': 'Ninguna',
-            'leve': 'Leve',
-            'moderada': 'Moderada',
-            'severa': 'Severa'
-        };
-        return plagasTexto[plagas] || plagas;
+    formatearPlagas(lote) {
+        if (lote.plagas === 'ninguna') {
+            return 'Ninguna';
+        } else if (lote.plagas === 'plaga' && lote.plagaEspecifica) {
+            const plagasTexto = {
+                'sigatoka_negra': 'Sigatoka Negra',
+                'picudo_negro': 'Picudo Negro',
+                'nematodos': 'Nematodos'
+            };
+            return plagasTexto[lote.plagaEspecifica] || lote.plagaEspecifica;
+        } else {
+            return 'Plaga';
+        }
     }
 
     // Exportar datos
@@ -641,7 +695,7 @@ class SistemaInventario {
     async generarDatosEjemplo() {
         const ejemplos = [
             {
-                codigoLote: 'LOT-2024-001',
+                codigoLote: 'BAN-2024-001',
                 finca: 'Finca San José',
                 fechaCosecha: '2024-07-20',
                 peso: 150.5,
@@ -650,10 +704,10 @@ class SistemaInventario {
                 color: 'verde',
                 tamano: 'grande',
                 plagas: 'ninguna',
-                notas: 'Lote de excelente calidad, cosecha matutina'
+                notas: 'Lote de banano Cavendish, excelente calidad'
             },
             {
-                codigoLote: 'LOT-2024-002',
+                codigoLote: 'BAN-2024-002',
                 finca: 'Finca El Paraíso',
                 fechaCosecha: '2024-07-18',
                 peso: 85.2,
@@ -661,20 +715,21 @@ class SistemaInventario {
                 calidad: 'buena',
                 color: 'amarillo',
                 tamano: 'mediano',
-                plagas: 'leve',
-                notas: 'Reservado para exportación europea'
+                plagas: 'plaga',
+                plagaEspecifica: 'sigatoka_negra',
+                notas: 'Tratamiento aplicado para Sigatoka, reservado para mercado local'
             },
             {
-                codigoLote: 'LOT-2024-003',
+                codigoLote: 'BAN-2024-003',
                 finca: 'Finca La Esperanza',
                 fechaCosecha: '2024-07-15',
                 peso: 200.0,
                 estado: 'exportado',
                 calidad: 'excelente',
-                color: 'rojo',
+                color: 'verde',
                 tamano: 'extra_grande',
                 plagas: 'ninguna',
-                notas: 'Exportado a Estados Unidos'
+                notas: 'Exportado a Estados Unidos - Premium quality'
             }
         ];
 
@@ -689,7 +744,7 @@ class SistemaInventario {
 
         Toast.fire({
             icon: 'info',
-            title: 'Datos cargados'
+            title: 'Datos de ejemplo de banano cargados'
         });
 
         ejemplos.forEach(ejemplo => this.agregarLote(ejemplo));

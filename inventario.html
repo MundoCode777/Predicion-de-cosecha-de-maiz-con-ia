@@ -195,17 +195,54 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="plagas">Presencia de Plagas</label>
+                        <label for="plagas">Plagas y Enfermedades</label>
                         <select id="plagas">
-                            <option value="ninguna">Ninguna</option>
-                            <option value="leve">Leve</option>
-                            <option value="moderada">Moderada</option>
-                            <option value="severa">Severa</option>
+                            <option value="ninguna">Sin plagas</option>
+                            <optgroup label="Enfermedades Fúngicas">
+                                <option value="sigatoka_negra">Sigatoka Negra (Mycosphaerella fijiensis)</option>
+                                <option value="sigatoka_amarilla">Sigatoka Amarilla (Mycosphaerella musicola)</option>
+                                <option value="mal_panama">Mal de Panamá (Fusarium oxysporum)</option>
+                                <option value="antracnosis">Antracnosis (Colletotrichum musae)</option>
+                                <option value="pudricion_corona">Pudrición de Corona</option>
+                                <option value="cercosporiosis">Cercosporiosis</option>
+                            </optgroup>
+                            <optgroup label="Plagas de Insectos">
+                                <option value="picudo_negro">Picudo Negro (Cosmopolites sordidus)</option>
+                                <option value="cochinilla">Cochinilla (Pseudococcus spp.)</option>
+                                <option value="trips">Trips (Chaetanaphothrips signipennis)</option>
+                                <option value="acaros">Ácaros Rojos</option>
+                                <option value="mosca_fruta">Mosca de la Fruta</option>
+                                <option value="gusano_cabeza">Gusano Cabeza de Rata</option>
+                                <option value="hormiga_loca">Hormiga Loca</option>
+                            </optgroup>
+                            <optgroup label="Nematodos">
+                                <option value="nematodo_barrenador">Nematodo Barrenador (Radopholus similis)</option>
+                                <option value="nematodo_lesiones">Nematodo de Lesiones (Pratylenchus coffeae)</option>
+                                <option value="nematodo_espiral">Nematodo Espiral (Helicotylenchus multicinctus)</option>
+                            </optgroup>
+                            <optgroup label="Plagas Vertebrados">
+                                <option value="ratas">Ratas</option>
+                                <option value="murcielagos">Murciélagos</option>
+                                <option value="ardillas">Ardillas</option>
+                                <option value="pajaros">Pájaros</option>
+                            </optgroup>
+                            <optgroup label="Otras Plagas">
+                                <option value="babosas">Babosas y Caracoles</option>
+                                <option value="comején">Comején</option>
+                                <option value="chinche_encaje">Chinche de Encaje</option>
+                            </optgroup>
+                            <optgroup label="Defectos Fisiológicos">
+                                <option value="cicatrices_latex">Cicatrices de Látex</option>
+                                <option value="dedos_dobles">Dedos Dobles</option>
+                                <option value="rajaduras">Rajaduras</option>
+                                <option value="quemaduras_sol">Quemaduras de Sol</option>
+                                <option value="chilling">Daño por Frío (Chilling)</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div class="form-group full-width">
                         <label for="notas">Notas Adicionales</label>
-                        <textarea id="notas" rows="3" placeholder="Observaciones adicionales..."></textarea>
+                        <textarea id="notas" rows="3" placeholder="Observaciones adicionales, tratamientos aplicados, etc..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -219,5 +256,4 @@
     <script src="./js/inventario.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.32/sweetalert2.all.min.js"></script>
 
-</body>
-</html>
+    <style>

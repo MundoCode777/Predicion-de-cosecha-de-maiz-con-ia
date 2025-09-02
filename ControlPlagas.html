@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Plagas y Calidad Pre-Exportación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css">
+    <link rel="stylesheet" href="./css/ControlPlagas.css">
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="header">
+        <a href="./dashboard.html" class="back-to-dashboard" onclick="goToDashboard()">
+            <i class="fas fa-arrow-left"></i> Regresar al Dashboard
+        </a>
+        <h1><i class="fas fa-bug"></i> Control de Plagas y Calidad Pre-Exportación</h1>
+        <p>Sistema de inspección y control de calidad para productos de exportación</p>
+    </div>
+
+    <div class="container">
+        <!-- Estadísticas -->
+        <div class="stats-grid">
+            <div class="stat-card approved">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <div class="number" id="approvedCount">0</div>
+                    <div>Aprobados</div>
+                </div>
+            </div>
+            <div class="stat-card pending">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <div class="number" id="pendingCount">0</div>
+                    <div>Pendientes</div>
+                </div>
+            </div>
+            <div class="stat-card rejected">
+                <i class="fas fa-times-circle"></i>
+                <div>
+                    <div class="number" id="rejectedCount">0</div>
+                    <div>Rechazados</div>
+                </div>
+            </div>
+            <div class="stat-card total">
+                <i class="fas fa-clipboard-list"></i>
+                <div>
+                    <div class="number" id="totalCount">0</div>
+                    <div>Total</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Formulario Principal -->
+            <div class="form-section">
+                <h2><i class="fas fa-clipboard-check"></i> Registro de Inspección</h2>
+                
+                <form id="inspectionForm">
+                    <div class="quality-grid">
+                        <div class="form-group">
+                            <label for="loteNumber">Número de Lote/Finca</label>
+                            <input type="text" id="loteNumber" name="loteNumber" placeholder="Ej: LOTE-001" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="inspectionDate">Fecha de Inspección</label>
+                            <input type="date" id="inspectionDate" name="inspectionDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="inspector">Inspector Responsable</label>
+                            <input type="text" id="inspector" name="inspector" placeholder="Nombre del inspector" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo de Plagas Detectadas</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="moscaFruta" name="plagas" value="Mosca de la fruta">
+                                <label for="moscaFruta"><i class="fas fa-bug"></i> Mosca de la fruta</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sigatokaNegra" name="plagas" value="Sigatoka negra">
+                                <label for="sigatokaNegra"><i class="fas fa-leaf"></i> Sigatoka negra</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tripsBanano" name="plagas" value="Trips del banano">
+                                <label for="tripsBanano"><i class="fas fa-seedling"></i> Trips del banano</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="acaros" name="plagas" value="Ácaros">
+                                <label for="acaros"><i class="fas fa-spider"></i> Ácaros</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ninguna" name="plagas" value="Ninguna">
+                                <label for="ninguna"><i class="fas fa-check"></i> Ninguna</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quality-grid">
+                        <div class="form-group">
+                            <label for="estadoRacimo">Estado del Racimo</label>
+                            <select id="estadoRacimo" name="estadoRacimo" required>
+                                <option value="">Seleccionar estado</option>
+                                <option value="verde">Verde</option>
+                                <option value="sobremaduro">Sobremaduro</option>
+                                <option value="con_manchas">Con manchas</option>
+                                <option value="optimo">Óptimo</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tamanoPromedio">Tamaño Promedio (cm)</label>
+                            <input type="number" id="tamanoPromedio" name="tamanoPromedio" placeholder="Ej: 18.5" step="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pesoPromedio">Peso Promedio (kg)</label>
+                            <input type="number" id="pesoPromedio" name="pesoPromedio" placeholder="Ej: 1.2" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones del Inspector</label>
+                        <textarea id="observaciones" name="observaciones" rows="4" placeholder="Detalles adicionales sobre la inspección..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fotos del Lote Inspeccionado</label>
+                        <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-camera"></i>
+                            <p>Hacer clic para subir fotos</p>
+                            <small>Formatos: JPG, PNG, máximo 5MB cada una</small>
+                            <input type="file" id="fileInput" multiple accept="image/*">
+                        </div>
+                        <div class="file-preview" id="filePreview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estatus del Lote</label>
+                        <div class="status-buttons">
+                            <button type="button" class="status-btn approved" data-status="approved">
+                                <i class="fas fa-check"></i> Aprobado para exportación
+                            </button>
+                            <button type="button" class="status-btn rejected" data-status="rejected">
+                                <i class="fas fa-times"></i> Rechazado
+                            </button>
+                            <button type="button" class="status-btn pending" data-status="pending">
+                                <i class="fas fa-clock"></i> Pendiente de tratamiento
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i> Guardar Inspección
+                    </button>
+                </form>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3><i class="fas fa-history"></i> Inspecciones Recientes</h3>
+                <ul class="recent-inspections" id="recentInspections">
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No hay inspecciones registradas</p>
+                        <small>Los registros aparecerán aquí después de guardar una inspección</small>
+                    </div>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="historial-section">
+            <h2><i class="fas fa-chart-line"></i> Historial de Plagas y Tratamientos</h2>
+            <table class="historial-table">
+                <thead>
+                    <tr>
+                        <th>Lote/Finca</th>
+                        <th>Fecha</th>
+                        <th>Plagas Detectadas</th>
+                        <th>Estado</th>
+                        <th>Inspector</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="historialTable">
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-database"></i>
+                                <p>No hay datos registrados</p>
+                                <small>Complete el formulario de inspección para comenzar a llenar el historial</small>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="./js/ControlPlagas.js"></script>
+</body>
+</html>

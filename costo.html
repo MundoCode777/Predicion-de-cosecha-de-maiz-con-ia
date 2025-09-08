@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💵 Gestión de Costos y Rentabilidad</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="./css/costo.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💵 Gestión de Costos y Rentabilidad</h1>
+            <p>Evalúa la rentabilidad de tu producción y exportación</p>
+        </div>
+
+        <div class="dashboard">
+            <!-- Registro de Costos -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">💰</div>
+                    <div class="card-title">Registro de Costos</div>
+                </div>
+                <div class="form-group">
+                    <label for="finca">Finca/Campaña:</label>
+                    <input type="text" id="finca" placeholder="Nombre de la finca">
+                </div>
+                <div class="form-group">
+                    <label for="manoObra">Mano de Obra ($):</label>
+                    <input type="number" id="manoObra" placeholder="Ej: 2500.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="fertilizantes">Fertilizantes ($):</label>
+                    <input type="number" id="fertilizantes" placeholder="Ej: 1800.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="transporte">Transporte ($):</label>
+                    <input type="number" id="transporte" placeholder="Ej: 750.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="otrosCostos">Otros Costos ($):</label>
+                    <input type="number" id="otrosCostos" placeholder="Ej: 450.00" step="0.01">
+                </div>
+            </div>
+
+            <!-- Ingresos por Exportación -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📈</div>
+                    <div class="card-title">Ingresos por Exportación</div>
+                </div>
+                <div class="form-group">
+                    <label for="cantidadExportada">Cantidad Exportada (kg):</label>
+                    <input type="number" id="cantidadExportada" placeholder="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="precioUnitario">Precio Unitario ($/kg):</label>
+                    <input type="number" id="precioUnitario" placeholder="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="temporada">Temporada:</label>
+                    <select id="temporada">
+                        <option value="">Seleccionar temporada</option>
+                        <option value="2024-1">2024 - Temporada 1</option>
+                        <option value="2024-2">2024 - Temporada 2</option>
+                        <option value="2025-1">2025 - Temporada 1</option>
+                        <option value="2025-2">2025 - Temporada 2</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="calcularRentabilidad()">
+                    Calcular Rentabilidad
+                </button>
+            </div>
+
+            <!-- Acciones Rápidas -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Acciones Rápidas</div>
+                </div>
+                <button class="btn btn-success" onclick="guardarDatos()" style="width: 100%; margin-bottom: 10px;">
+                    Guardar Registro
+                </button>
+                <button class="btn btn-info" onclick="mostrarComparacion()" style="width: 100%; margin-bottom: 10px;">
+                    Ver Comparación
+                </button>
+                <button class="btn btn-primary" onclick="limpiarFormulario()" style="width: 100%; margin-bottom: 10px;">
+                    Limpiar Formulario
+                </button>
+                <button class="btn btn-danger" onclick="eliminarTodosLosDatos()" style="width: 100%;">
+                    Eliminar Todos los Datos
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección de Resultados -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="color: var(--primary-color); margin: 0;">
+                    📊 Resultados del Análisis
+                </h2>
+                <button class="btn btn-info" onclick="volverAlDashboard()">
+                    🏠 Volver al Dashboard
+                </button>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-item cost">
+                    <div class="result-value" id="totalCostos">$0.00</div>
+                    <div class="result-label">Total Costos</div>
+                </div>
+                <div class="result-item revenue">
+                    <div class="result-value" id="totalIngresos">$0.00</div>
+                    <div class="result-label">Total Ingresos</div>
+                </div>
+                <div class="result-item profit">
+                    <div class="result-value" id="rentabilidad">0%</div>
+                    <div class="result-label">Rentabilidad</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <div id="gananciaText" style="font-size: 1.5em; font-weight: bold;"></div>
+                <div id="costoUnitario" style="font-size: 1.2em; margin-top: 10px; color: var(--text-light);"></div>
+            </div>
+        </div>
+
+        <!-- Tabla de Comparación -->
+        <div class="results-section" id="comparisonSection" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="color: var(--primary-color); margin: 0;">
+                    📈 Comparación entre Fincas/Temporadas
+                </h2>
+                <button class="btn btn-info" onclick="volverAlDashboard()">
+                    🏠 Volver al Dashboard
+                </button>
+            </div>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Finca/Campaña</th>
+                        <th>Temporada</th>
+                        <th>Costos Totales</th>
+                        <th>Ingresos</th>
+                        <th>Ganancia</th>
+                        <th>Rentabilidad</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="./js/costo.js"></script>
+</body>
+</html>

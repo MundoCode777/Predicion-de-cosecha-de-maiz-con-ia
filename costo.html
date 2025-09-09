@@ -11,7 +11,7 @@
     <div class="container">
         <div class="header">
             <h1>💵 Gestión de Costos y Rentabilidad</h1>
-            <p>Evalúa la rentabilidad de tu producción y exportación</p>
+            <p>Evalúa la rentabilidad de tu producción y exportación por rutas</p>
         </div>
 
         <div class="dashboard">
@@ -33,13 +33,50 @@
                     <label for="fertilizantes">Fertilizantes ($):</label>
                     <input type="number" id="fertilizantes" placeholder="Ej: 1800.00" step="0.01">
                 </div>
-                <div class="form-group">
-                    <label for="transporte">Transporte ($):</label>
-                    <input type="number" id="transporte" placeholder="Ej: 750.00" step="0.01">
+            </div>
+
+            <!-- Rutas de Exportación -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🚢</div>
+                    <div class="card-title">Rutas de Exportación</div>
                 </div>
                 <div class="form-group">
-                    <label for="otrosCostos">Otros Costos ($):</label>
-                    <input type="number" id="otrosCostos" placeholder="Ej: 450.00" step="0.01">
+                    <label for="rutaExportacion">Ruta de Exportación:</label>
+                    <select id="rutaExportacion" onchange="actualizarRutaInfo()">
+                        <option value="">Seleccionar ruta</option>
+                        <option value="EEUU" data-precio="7500">Estados Unidos</option>
+                        <option value="Europa" data-precio="8000">Europa</option>
+                        <option value="MedioOriente" data-precio="8000">Medio Oriente</option>
+                    </select>
+                </div>
+                <div id="rutaInfo" class="route-info" style="display: none;">
+                    <h4>Información de la Ruta</h4>
+                    <p id="rutaDestino"></p>
+                    <p id="rutaPrecio"></p>
+                </div>
+                <div class="form-group">
+                    <label for="numContenedores">Número de Contenedores:</label>
+                    <input type="number" id="numContenedores" placeholder="Cantidad de contenedores" min="1" step="1" onchange="calcularCostoTransporte()">
+                </div>
+                <div class="form-group">
+                    <label for="cantidadCajas">Cantidad de Cajas por Contenedor:</label>
+                    <select id="cantidadCajas" onchange="calcularCostoTransporte()">
+                        <option value="">Seleccionar cantidad</option>
+                        <option value="960">960 cajas</option>
+                        <option value="1080">1,080 cajas</option>
+                        <option value="1134">1,134 cajas</option>
+                        <option value="1200">1,200 cajas</option>
+                        <option value="1500">1,500 cajas</option>
+                    </select>
+                </div>
+                <div class="container-section">
+                    <h4 style="color: var(--primary-color); margin-bottom: 10px;">📦 Resumen de Contenedores</h4>
+                    <p><strong>Costo por contenedor:</strong> <span id="costoPorContenedor">$0</span></p>
+                    <p><strong>Total contenedores:</strong> <span id="totalContenedores">0</span></p>
+                    <p><strong>Cajas por contenedor:</strong> <span id="cajasPorContenedor">0</span></p>
+                    <p><strong>Total de cajas:</strong> <span id="totalCajas">0</span></p>
+                    <p><strong>Costo total de transporte:</strong> <span id="costoTotalTransporte">$0</span></p>
                 </div>
             </div>
 
@@ -49,23 +86,18 @@
                     <div class="card-icon">📈</div>
                     <div class="card-title">Ingresos por Exportación</div>
                 </div>
-                <div class="form-group">
-                    <label for="cantidadExportada">Cantidad Exportada (kg):</label>
-                    <input type="number" id="cantidadExportada" placeholder="0" step="0.01">
+                <div style="background: var(--light-background); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent-color);">
+                    <p style="margin: 0; color: var(--text-dark); font-weight: 600;">
+                        💡 Precio por caja: <span style="color: var(--success-color);">$6.50</span>
+                    </p>
                 </div>
                 <div class="form-group">
-                    <label for="precioUnitario">Precio Unitario ($/kg):</label>
-                    <input type="number" id="precioUnitario" placeholder="0.00" step="0.01">
+                    <label for="totalCajasCalculado">Total de Cajas a Exportar:</label>
+                    <input type="number" id="totalCajasCalculado" placeholder="0" readonly style="background-color: #f5f5f5;">
                 </div>
                 <div class="form-group">
-                    <label for="temporada">Temporada:</label>
-                    <select id="temporada">
-                        <option value="">Seleccionar temporada</option>
-                        <option value="2024-1">2024 - Temporada 1</option>
-                        <option value="2024-2">2024 - Temporada 2</option>
-                        <option value="2025-1">2025 - Temporada 1</option>
-                        <option value="2025-2">2025 - Temporada 2</option>
-                    </select>
+                    <label for="ingresosTotales">Ingresos Totales ($):</label>
+                    <input type="number" id="ingresosTotales" placeholder="0.00" readonly style="background-color: #f5f5f5;">
                 </div>
                 <button class="btn btn-primary" onclick="calcularRentabilidad()">
                     Calcular Rentabilidad
@@ -122,6 +154,7 @@
             <div style="text-align: center; margin-top: 20px;">
                 <div id="gananciaText" style="font-size: 1.5em; font-weight: bold;"></div>
                 <div id="costoUnitario" style="font-size: 1.2em; margin-top: 10px; color: var(--text-light);"></div>
+                <div id="desgloseCostos" style="font-size: 1.1em; margin-top: 15px; color: var(--text-light);"></div>
             </div>
         </div>
 
@@ -129,18 +162,21 @@
         <div class="results-section" id="comparisonSection" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                 <h2 style="color: var(--primary-color); margin: 0;">
-                    📈 Comparación entre Fincas/Temporadas
+                    📈 Comparación entre Fincas/Rutas
                 </h2>
-                <a href="dashboard.html" class="btn btn-info">
+                <button class="btn btn-info" onclick="volverAlDashboard()">
                     🏠 Volver al Dashboard
-                </a>
+                </button>
             </div>
             
             <table class="comparison-table">
                 <thead>
                     <tr>
                         <th>Finca/Campaña</th>
-                        <th>Temporada</th>
+                        <th>Ruta Exportación</th>
+                        <th>Contenedores</th>
+                        <th>Cajas por Contenedor</th>
+                        <th>Total Cajas</th>
                         <th>Costos Totales</th>
                         <th>Ingresos</th>
                         <th>Ganancia</th>

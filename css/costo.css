@@ -1,4 +1,4 @@
-        :root {
+                :root {
             /* Colores Principales */
             --primary-color: #2c5530;
             --secondary-color: #4a7c59;
@@ -283,6 +283,33 @@
             background: #d32f2f;
         }
 
+        .route-info {
+            background: var(--light-background);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .route-info h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .route-info p {
+            margin: 5px 0;
+            color: var(--text-light);
+        }
+
+        .container-section {
+            background: var(--light-background);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -300,3 +327,4 @@
                 grid-template-columns: 1fr;
             }
         }
+

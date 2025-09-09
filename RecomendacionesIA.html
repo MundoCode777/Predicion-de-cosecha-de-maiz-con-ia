@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍌 IA Banano - Recomendaciones Inteligentes</title>
+    <link rel="stylesheet" href="./css/RecomendacionesIA.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍌 Sistema IA para Cultivo de Banano</h1>
+            <p>Recomendaciones inteligentes para banano convencional y orgánico</p>
+        </div>
+
+        <div class="plantation-selector">
+            <div class="plantation-type conventional active" onclick="switchPlantationType('conventional')">
+                🍌 Banano Convencional
+            </div>
+            <div class="plantation-type organic" onclick="switchPlantationType('organic')">
+                🌱 Banano Orgánico
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="generateBananaRecommendations()">🔄 Analizar Plantación</button>
+            <button onclick="updateClimateData()">🌤️ Datos Climáticos</button>
+            <button onclick="simulateBananaGrowth()">🍌 Simular Crecimiento</button>
+            <button onclick="detectBananaDiseases()">🦠 Detectar Enfermedades</button>
+        </div>
+
+        <div class="dashboard">
+            <!-- Panel de Alertas Específicas para Banano -->
+            <div class="panel alerts-section">
+                <div class="panel-title">
+                    <span class="icon">🚨</span>
+                    Alertas del Bananal
+                </div>
+                <div id="alerts-container">
+                    <!-- Las alertas se generarán dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Panel de Recomendaciones para Banano -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span class="icon">💡</span>
+                    Recomendaciones Especializadas
+                </div>
+                <div id="recommendations-container">
+                    <!-- Las recomendaciones se generarán dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Estado de Lotes de Banano -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span class="icon">🍌</span>
+                    Estado de Lotes
+                </div>
+                <div class="banana-plots" id="banana-plots">
+                    <!-- Los lotes se generarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Métricas Específicas del Banano -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon">📊</span>
+                Métricas de Producción Bananera
+            </div>
+            <div class="metrics" id="metrics-container">
+                <!-- Las métricas se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Análisis de Enfermedades del Banano -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="icon">🦠</span>
+                Monitor de Enfermedades
+            </div>
+            <div class="disease-chart" id="disease-chart">
+                <div class="chart-container" id="disease-chart-container">
+                    <!-- El gráfico de enfermedades se generará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/RecomendacionesIA.js"></script>
+</body>
+</html>

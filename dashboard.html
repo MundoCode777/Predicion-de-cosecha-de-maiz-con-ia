@@ -374,10 +374,7 @@
           </div>
         </div>
 
-        <!-- Gráfico de predicción existente -->
-        <div class="grafico-prediccion">
-          <div id="graficoPrediccion" style="height: 300px;"></div>
-        </div>
+        <!-- GRÁFICO DE PREDICCIÓN REMOVIDO -->
 
         <!-- Nuevas métricas de exportaciones -->
         <div class="export-stats">
@@ -537,57 +534,8 @@
         document.getElementById('harvestDays').textContent = Math.round(30 + Math.random() * 30);
         document.getElementById('riskLevel').textContent = ['Bajo', 'Medio', 'Alto'][Math.floor(Math.random() * 3)];
 
-        // Mostrar gráfico de predicción
-        var myChart = echarts.init(document.getElementById('graficoPrediccion'));
-        var option = {
-          title: {
-            text: 'Predicción de Cosecha (Toneladas por Hectárea)',
-            left: 'center',
-            textStyle: {
-              color: '#2980b9',
-              fontSize: 16
-            }
-          },
-          xAxis: {
-            type: 'category',
-            data: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4'],
-            axisLabel: {
-              color: '#7f8c8d'
-            }
-          },
-          yAxis: {
-            type: 'value',
-            name: 'Toneladas por Hectárea',
-            axisLabel: {
-              color: '#7f8c8d'
-            }
-          },
-          series: [{
-            data: [
-              datos.rendimiento * 0.6,
-              datos.rendimiento * 0.8,
-              datos.rendimiento * 0.9,
-              parseFloat(datos.rendimiento)
-            ],
-            type: 'line',
-            areaStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {offset: 0, color: '#2ecc71'},
-                {offset: 1, color: '#27ae60'}
-              ])
-            },
-            lineStyle: {
-              color: '#2ecc71',
-              width: 3
-            },
-            itemStyle: {
-              color: '#2ecc71'
-            },
-            animationDuration: 2000,
-            animationEasing: 'bounceOut'
-          }]
-        };
-        myChart.setOption(option);
+        // CÓDIGO DEL GRÁFICO DE PREDICCIÓN REMOVIDO
+
       } else {
         // Datos por defecto si no hay predicción
         document.getElementById('predictionYield').textContent = '-- ton/ha';
